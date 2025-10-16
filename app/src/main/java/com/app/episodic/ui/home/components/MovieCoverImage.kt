@@ -77,18 +77,31 @@ fun MovieCoverImage(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth(),
-            color = Color.Black.copy(.8f),
+            color = Color.Black,
             contentColor = Color.White,
             shape = RoundedCornerShape(
-                bottomEnd = 30.dp,
-                bottomStart = 30.dp,
+                bottomEnd = 10.dp,
+                bottomStart = 10.dp,
             )
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
-                Text(text = movie.title, maxLines = 1)
+                val displayTitle = if (movie.title.isNotEmpty() && movie.title != "Unknown title") {
+                    movie.title
+                } else {
+                    movie.originalTitle
+                }
+                
+                Text(
+                    text = displayTitle, 
+                    maxLines = 1,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
             }
         }
     }

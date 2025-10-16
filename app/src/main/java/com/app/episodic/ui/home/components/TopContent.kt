@@ -106,8 +106,14 @@ fun TopContent(
                     verticalAlignment = Alignment.Top
                 ) {
                     // Título de la película (izquierda)
+                    val displayTitle = if (movie.title.isNotEmpty() && movie.title != "Unknown title") {
+                        movie.title
+                    } else {
+                        movie.originalTitle
+                    }
+                    
                     Text(
-                        text = movie.title,
+                        text = displayTitle,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -142,7 +148,7 @@ fun TopContent(
                 val displayGenres = movie.genreIds.take(2)
                 if (displayGenres.isNotEmpty()) {
                     Text(
-                        text = displayGenres.joinToString(" & "),
+                        text = displayGenres.joinToString(" • "),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White,
                         maxLines = 1,
@@ -153,8 +159,10 @@ fun TopContent(
                 Spacer(modifier = Modifier.height(4.dp))
                 
                 // Fecha de lanzamiento
-                val releaseYear = movie.releaseDate.takeIf { it.isNotEmpty() }?.take(4)
-                if (releaseYear != null) {
+                val releaseYear = movie.releaseDate.takeIf { 
+                    it.isNotEmpty() && it != "Unknown date" 
+                }?.take(4)
+                if (releaseYear != null && releaseYear.isNotEmpty()) {
                     Text(
                         text = releaseYear,
                         style = MaterialTheme.typography.bodyMedium,
@@ -164,24 +172,36 @@ fun TopContent(
                 
                 Spacer(modifier = Modifier.height(8.dp))
                 
-                // Fila inferior: Duración e Idioma
+                // Fila inferior: Idioma y Información adicional
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    // Duración e idioma (izquierda)
-                    val duration = "1h 34min" // Placeholder - se puede obtener del MovieDetail si está disponible
-                    val language = when (movie.originalLanguage) {
+                    // Idioma y información (izquierda)
+                    val language = when (movie.originalLanguage.lowercase()) {
                         "en" -> "Inglés"
                         "es" -> "Español"
                         "fr" -> "Francés"
                         "de" -> "Alemán"
+                        "it" -> "Italiano"
+                        "pt" -> "Portugués"
+                        "ru" -> "Ruso"
+                        "ja" -> "Japonés"
+                        "ko" -> "Coreano"
+                        "zh" -> "Chino"
                         else -> movie.originalLanguage.uppercase()
                     }
                     
+                    // Información adicional: votos y popularidad
+                    val additionalInfo = if (movie.voteCount > 1000) {
+                        "${movie.voteCount / 1000}K votos"
+                    } else {
+                        "${movie.voteCount} votos"
+                    }
+                    
                     Text(
-                        text = "$duration, $language",
+                        text = "$language • $additionalInfo",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White
                     )

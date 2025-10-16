@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.episodic.ui.components.LoadingView
 import com.app.episodic.ui.home.components.BodyContent
+import com.app.episodic.ui.home.components.GenreButtons
 import com.app.episodic.ui.home.components.HomeHeader
 import com.app.episodic.ui.home.components.TopContent
 import kotlinx.coroutines.delay
@@ -91,43 +92,47 @@ fun HomeScreen(
                 )
             }
             if (!state.isLoading && state.error == null) {
-                BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                    val boxHeight = maxHeight
-                    val topItemHeight = boxHeight * .35f
-                    val bodyItemHeight = boxHeight * .65f
-                    HorizontalPager(
-                        state = pagerState,
-                        contentPadding = PaddingValues(defaultPadding),
-                        pageSize = PageSize.Fill,
-                        pageSpacing = itemSpacing
-                    ) { page ->
-                        if (isAutoScrolling) {
-                            AnimatedContent(
-                                targetState = page,
-                                label = "",
-                            ) { index ->
+                Column(modifier = Modifier.fillMaxSize()) {
+                    // Carrusel principal de películas
+                    Box(modifier = Modifier.weight(0.4f)) {
+                        HorizontalPager(
+                            state = pagerState,
+                            contentPadding = PaddingValues(defaultPadding),
+                            pageSize = PageSize.Fill,
+                            pageSpacing = itemSpacing
+                        ) { page ->
+                            if (isAutoScrolling) {
+                                AnimatedContent(
+                                    targetState = page,
+                                    label = "",
+                                ) { index ->
+                                    TopContent(
+                                        modifier = Modifier.fillMaxSize(),
+                                        movie = state.discoverMovies[index],
+                                        onMovieClick = onMovieClick
+                                    )
+                                }
+                            } else {
                                 TopContent(
-                                    modifier = Modifier
-                                        .align(Alignment.TopCenter)
-                                        .heightIn(min = topItemHeight),
-                                    movie = state.discoverMovies[index],
+                                    modifier = Modifier.fillMaxSize(),
+                                    movie = state.discoverMovies[page],
                                     onMovieClick = onMovieClick
                                 )
                             }
-                        } else {
-                            TopContent(
-                                modifier = Modifier
-                                    .align(Alignment.TopCenter)
-                                    .heightIn(min = topItemHeight),
-                                movie = state.discoverMovies[page],
-                                onMovieClick = onMovieClick
-                            )
                         }
                     }
+                    
+                    // Carrusel de géneros
+                    GenreButtons(
+                        modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
+                        onGenreClick = { _ ->
+                            // TODO: Implementar navegación a películas por género
+                        }
+                    )
+                    
+                    // Contenido principal
                     BodyContent(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .heightIn(max = bodyItemHeight),
+                        modifier = Modifier.weight(0.6f),
                         discoverMovies = state.discoverMovies,
                         trendingMovies = state.trendingMovies,
                         onMovieClick = onMovieClick
