@@ -40,6 +40,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
     onMovieClick: (id: Int) -> Unit,
+    onTvClick: (id: Int) -> Unit = {},
     onNavigateToHome: () -> Unit = {}
 ) {
     var isAutoScrolling by remember {
@@ -111,7 +112,11 @@ fun HomeScreen(
                                 com.app.episodic.ui.home.components.SearchResultItem(
                                     item = state.searchResults[idx],
                                     onClick = { id, mediaType ->
-                                        if (mediaType == "movie") onMovieClick(id)
+                                        if (mediaType == "movie") {
+                                            onMovieClick(id)
+                                        } else if (mediaType == "tv") {
+                                            onTvClick(id)
+                                        }
                                     }
                                 )
                             }

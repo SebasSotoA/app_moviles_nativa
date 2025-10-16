@@ -25,3 +25,4 @@ class SearchMapperImpl : ApiMapper<List<SearchItem>, SearchMultiDto> {
 }
 
 
+

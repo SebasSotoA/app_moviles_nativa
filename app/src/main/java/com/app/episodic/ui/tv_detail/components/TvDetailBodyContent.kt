@@ -1,4 +1,4 @@
-package com.app.episodic.ui.detail.components
+package com.app.episodic.ui.tv_detail.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -39,22 +39,24 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.episodic.movie.domain.models.Movie
-import com.app.episodic.movie_detail.domain.models.MovieDetail
-import com.app.episodic.movie_detail.domain.models.Review
+import com.app.episodic.tv.domain.models.Tv
+import com.app.episodic.tv_detail.domain.models.Cast
+import com.app.episodic.tv_detail.domain.models.Review
+import com.app.episodic.tv_detail.domain.models.TvDetail
+import com.app.episodic.ui.tv_detail.components.TvActorItem
 import com.app.episodic.ui.home.components.MovieCard
 import com.app.episodic.ui.home.components.MovieCoverImage
 import com.app.episodic.ui.home.defaultPadding
 import com.app.episodic.ui.home.itemSpacing
 
-
 @Composable
-fun DetailBodyContent(
+fun TvDetailBodyContent(
     modifier: Modifier = Modifier,
-    movieDetail: MovieDetail,
-    movies: List<Movie>,
-    isMovieLoading: Boolean,
-    fetchMovies: () -> Unit,
-    onMovieClick: (Int) -> Unit,
+    tvDetail: TvDetail,
+    tvShows: List<Tv>,
+    isTvLoading: Boolean,
+    fetchTvShows: () -> Unit,
+    onTvClick: (Int) -> Unit,
     onActorClick: (Int) -> Unit,
 ) {
     LazyColumn(modifier) {
@@ -77,7 +79,7 @@ fun DetailBodyContent(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            movieDetail.genreIds.forEachIndexed { index, genreText ->
+                            tvDetail.genreIds.forEachIndexed { index, genreText ->
                                 Text(
                                     text = genreText,
                                     modifier = Modifier
@@ -86,7 +88,7 @@ fun DetailBodyContent(
                                     style = MaterialTheme.typography.bodySmall
                                 )
                                 // Show divider after all except the last item
-                                if (index < movieDetail.genreIds.lastIndex) {
+                                if (index < tvDetail.genreIds.lastIndex) {
                                     Text(
                                         text = " • ",
                                         style = MaterialTheme.typography.bodySmall
@@ -95,19 +97,24 @@ fun DetailBodyContent(
                             }
                         }
                         Text(
-                            text = movieDetail.runTime,
+                            text = tvDetail.runTime,
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
                     Spacer(modifier = Modifier.height(itemSpacing))
                     Text(
-                        text = movieDetail.title,
+                        text = tvDetail.name,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(itemSpacing))
+                    
+                    // Información específica de TV
+                    TvSpecificInfo(tvDetail = tvDetail)
+                    Spacer(modifier = Modifier.height(itemSpacing))
+                    
                     Text(
-                        text = movieDetail.overview,
+                        text = tvDetail.overview,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Spacer(modifier = Modifier.height(itemSpacing))
@@ -140,13 +147,13 @@ fun DetailBodyContent(
                         IconButton(onClick = { /*TODO*/ }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                                contentDescription = "Cast & Crew"
+                                contentDescription = "Reparto y Equipo"
                             )
                         }
                     }
                     LazyRow {
-                        items(movieDetail.cast) { cast ->
-                            ActorItem(
+                        items(tvDetail.cast) { cast ->
+                            TvActorItem(
                                 cast = cast,
                                 modifier = Modifier
                                     .pointerInput(cast.id) {
@@ -160,51 +167,114 @@ fun DetailBodyContent(
                     }
                     Spacer(modifier = Modifier.height(itemSpacing))
 
-                    MovieInfoItem(
-                        infoItem = movieDetail.language,
-                        title = "Spoken language",
+                    TvInfoItem(
+                        infoItem = tvDetail.language,
+                        title = "Idiomas",
                     )
                     Spacer(modifier = Modifier.height(itemSpacing))
-                    MovieInfoItem(
-                        infoItem = movieDetail.productionCountry,
-                        title = "Production countries",
+                    TvInfoItem(
+                        infoItem = tvDetail.productionCountry,
+                        title = "Países de Producción",
                     )
                     Spacer(modifier = Modifier.height(itemSpacing))
                     Text(
-                        text = "Reviews",
+                        text = "Reseñas",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(itemSpacing))
-                    Review(reviews = movieDetail.reviews)
+                    Review(reviews = tvDetail.reviews)
                     Spacer(modifier = Modifier.height(itemSpacing))
-                    MoreLikeThis(
-                        fetchMovies = fetchMovies,
-                        isMovieLoading = isMovieLoading,
-                        movies = movies,
-                        onMovieClick = onMovieClick
+                    MoreLikeThisTv(
+                        fetchTvShows = fetchTvShows,
+                        isTvLoading = isTvLoading,
+                        tvShows = tvShows,
+                        onTvClick = onTvClick
                     )
-
                 }
             }
         }
-
-
     }
-
 }
 
+@Composable
+private fun TvSpecificInfo(tvDetail: TvDetail) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text(
+                text = "Temporadas: ${tvDetail.numberOfSeasons}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Episodios: ${tvDetail.numberOfEpisodes}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Column {
+            Text(
+                text = "Estado: ${tvDetail.status}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Tipo: ${tvDetail.type}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+    
+    // Próximo episodio si está disponible
+    tvDetail.nextEpisodeToAir?.let { nextEpisode ->
+        Spacer(modifier = Modifier.height(itemSpacing))
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = androidx.compose.material3.CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(defaultPadding)
+            ) {
+                Text(
+                    text = "Próximo Episodio",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "T${nextEpisode.seasonNumber}E${nextEpisode.episodeNumber}: ${nextEpisode.name}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = "Fecha: ${nextEpisode.airDate}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                if (nextEpisode.overview.isNotEmpty()) {
+                    Text(
+                        text = nextEpisode.overview,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
-fun MoreLikeThis(
+fun MoreLikeThisTv(
     modifier: Modifier = Modifier,
-    fetchMovies: () -> Unit,
-    isMovieLoading: Boolean,
-    movies: List<Movie>,
-    onMovieClick: (Int) -> Unit,
+    fetchTvShows: () -> Unit,
+    isTvLoading: Boolean,
+    tvShows: List<Tv>,
+    onTvClick: (Int) -> Unit,
 ) {
     LaunchedEffect(key1 = true) {
-        fetchMovies()
+        fetchTvShows()
     }
     Column(modifier) {
         Text(
@@ -214,22 +284,29 @@ fun MoreLikeThis(
         )
         LazyRow {
             item {
-                AnimatedVisibility(visible = isMovieLoading) {
+                AnimatedVisibility(visible = isTvLoading) {
                     CircularProgressIndicator()
                 }
             }
-            items(movies) {
-                MovieCoverImage(movie = it, onMovieClick = onMovieClick)
+            items(tvShows) { tvShow ->
+                // TODO: Crear TvCoverImage similar a MovieCoverImage
+                Text(
+                    text = tvShow.name,
+                    modifier = Modifier.pointerInput(tvShow.id) {
+                        detectTapGestures {
+                            onTvClick(tvShow.id)
+                        }
+                    }
+                )
             }
         }
     }
-
 }
 
 private enum class ActionIcon(val icon: ImageVector, val contentDescription: String) {
-    BookMark(icon = Icons.Default.Bookmark, "bookmark"),
-    Share(icon = Icons.Default.Share, "Share"),
-    Download(icon = Icons.Default.Download, "Download"),
+    BookMark(icon = Icons.Default.Bookmark, "marcador"),
+    Share(icon = Icons.Default.Share, "compartir"),
+    Download(icon = Icons.Default.Download, "descargar"),
 }
 
 @Composable
@@ -254,7 +331,7 @@ private fun ActionIconBtn(
 }
 
 @Composable
-private fun MovieInfoItem(infoItem: List<String>, title: String) {
+private fun TvInfoItem(infoItem: List<String>, title: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
@@ -287,10 +364,10 @@ private fun Review(
     val defaultReview =
         if (reviews.size > 3) reviews.take(3) else reviews
     // show more when user needs more review
-    val movieReviews = if (viewMore) reviews else defaultReview
+    val tvReviews = if (viewMore) reviews else defaultReview
     val btnText = if (viewMore) "Colapsar" else "Más..."
     Column(modifier) {
-        movieReviews.forEach { review ->
+        tvReviews.forEach { review ->
             ReviewItem(review = review)
             Spacer(modifier = Modifier.height(itemSpacing))
             HorizontalDivider(modifier = Modifier.fillMaxWidth())
@@ -300,5 +377,21 @@ private fun Review(
             Text(text = btnText)
         }
     }
-
 }
+
+@Composable
+private fun ReviewItem(review: Review) {
+    Column {
+        Text(
+            text = review.author,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = review.content,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+

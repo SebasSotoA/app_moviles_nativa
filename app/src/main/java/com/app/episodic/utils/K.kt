@@ -10,5 +10,6 @@ object K {
     const val TRENDING_MOVIE_ENDPOINT = "trending/movie/week"
     const val SEARCH_MULTI_ENDPOINT = "search/multi"
     const val MOVIE_ID = "id"
+    const val TV_ID = "tv_id"
     const val ACTOR_ID = "id"
 }

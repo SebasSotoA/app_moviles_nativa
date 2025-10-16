@@ -19,6 +19,7 @@ import com.app.episodic.ui.detail.MovieDetailScreen
 import com.app.episodic.ui.explore.ExploreScreen
 import com.app.episodic.ui.home.HomeScreen
 import com.app.episodic.ui.mylists.MyListsScreen
+import com.app.episodic.ui.tv_detail.TvDetailScreen
 import com.app.episodic.utils.K
 
 @Composable
@@ -74,6 +75,13 @@ fun EpisodicNavigationGraph(
                             launchSingleTop = true
                         }
                     },
+                    onTvClick = { tvId ->
+                        navController.navigate(
+                            Route.TvDetailScreen().getRouteWithArgs(id = tvId)
+                        ) {
+                            launchSingleTop = true
+                        }
+                    },
                     onNavigateToHome = {
                         // Limpiar búsqueda cuando se navega a Home
                         // Esto se manejará en HomeScreen
@@ -117,6 +125,30 @@ fun EpisodicNavigationGraph(
                     onMovieClick = { movieId ->
                         navController.navigate(
                             Route.FilmScreen().getRouteWithArgs(id = movieId)
+                        ) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onActorClick = {
+                        // TODO: Implementar navegación a perfil de actor
+                    }
+                )
+            }
+
+            // TV Detail Screen
+            composable(
+                route = Route.TvDetailScreen().routeWithArgs,
+                arguments = listOf(navArgument(name = K.TV_ID) { type = NavType.IntType })
+            ) {
+                val tvId = it.arguments?.getInt(K.TV_ID) ?: 0
+                TvDetailScreen(
+                    tvId = tvId,
+                    onNavigateUp = {
+                        navController.navigateUp()
+                    },
+                    onTvClick = { id ->
+                        navController.navigate(
+                            Route.TvDetailScreen().getRouteWithArgs(id = id)
                         ) {
                             launchSingleTop = true
                         }

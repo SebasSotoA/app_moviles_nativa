@@ -1,4 +1,4 @@
-package com.app.episodic.ui.detail.components
+package com.app.episodic.ui.tv_detail.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -29,24 +29,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.app.episodic.movie_detail.domain.models.MovieDetail
+import com.app.episodic.R
+import com.app.episodic.tv_detail.domain.models.TvDetail
 import com.app.episodic.ui.home.components.MovieCard
 import com.app.episodic.ui.home.defaultPadding
 import com.app.episodic.ui.home.itemSpacing
-import com.app.episodic.utils.K
-import com.app.episodic.R
 import com.app.episodic.ui.theme.primaryLightHighContrast
+import com.app.episodic.utils.K
 
 @Composable
-fun DetailTopContent(
+fun TvDetailTopContent(
     modifier: Modifier = Modifier,
-    movieDetail: MovieDetail
+    tvDetail: TvDetail
 ) {
     val imgRequest = ImageRequest.Builder(LocalContext.current)
-        .data("${K.BASE_IMAGE_URL}${movieDetail.posterPath}")
+        .data("${K.BASE_IMAGE_URL}${tvDetail.posterPath}")
         .crossfade(true)
         .build()
-    Box(modifier = modifier.fillMaxWidth()){
+    Box(modifier = modifier.fillMaxWidth()) {
         AsyncImage(
             model = imgRequest,
             contentDescription = null, // decorative element
@@ -58,22 +58,22 @@ fun DetailTopContent(
             },
             placeholder = painterResource(id = R.drawable.bg_image_movie)
         )
-        MovieDetailComponent(
-            rating = movieDetail.voteAverage,
-            releaseDate = movieDetail.releaseDate,
+        TvDetailComponent(
+            rating = tvDetail.voteAverage,
+            firstAirDate = tvDetail.firstAirDate,
+            numberOfSeasons = tvDetail.numberOfSeasons,
             modifier = Modifier
                 .align(Alignment.BottomStart)
         )
     }
-
-
 }
 
 @Composable
-private fun MovieDetailComponent(
+private fun TvDetailComponent(
     modifier: Modifier = Modifier,
     rating: Double,
-    releaseDate: String,
+    firstAirDate: String,
+    numberOfSeasons: Int,
 ) {
     Column(modifier) {
         MovieCard(
@@ -90,7 +90,7 @@ private fun MovieDetailComponent(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Star,
-                        contentDescription = "Rating",
+                        contentDescription = "Calificación",
                         tint = Color.Yellow
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -100,12 +100,20 @@ private fun MovieDetailComponent(
                 VerticalDivider(modifier = Modifier.height(16.dp))
                 Spacer(modifier = Modifier.width(itemSpacing))
                 Text(
-                    text = releaseDate,
+                    text = firstAirDate,
                     modifier = Modifier
                         .padding(6.dp),
                     maxLines = 1
                 )
-
+                Spacer(modifier = Modifier.width(itemSpacing))
+                VerticalDivider(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.width(itemSpacing))
+                Text(
+                    text = "$numberOfSeasons Temporada${if (numberOfSeasons != 1) "s" else ""}",
+                    modifier = Modifier
+                        .padding(6.dp),
+                    maxLines = 1
+                )
             }
         }
         Row(
@@ -121,7 +129,7 @@ private fun MovieDetailComponent(
                 Row(
                     modifier = Modifier.padding(4.dp)
                 ) {
-                    Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "play")
+                    Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "reproducir")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(text = "Mirar Ahora")
                 }
@@ -138,13 +146,13 @@ private fun MovieDetailComponent(
                 Row(
                     modifier = Modifier.padding(4.dp)
                 ) {
-                    Icon(imageVector = Icons.Filled.Movie, contentDescription = "play")
+                    Icon(imageVector = Icons.Filled.Tv, contentDescription = "trailer")
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Mirar Trailer")
+                    Text(text = "Ver Trailer")
                 }
             }
-
         }
     }
-
 }
+
+

@@ -17,4 +17,13 @@ sealed class Route {
             return "$route/$id"
         }
     }
+    
+    data class TvDetailScreen(
+        val route: String = "TvDetailScreen",
+        val routeWithArgs: String = "$route/{${K.TV_ID}}",
+    ) : Route() {
+        fun getRouteWithArgs(id: Int): String {
+            return "$route/$id"
+        }
+    }
 }

@@ -1,0 +1,17 @@
+package com.app.episodic.tv.data.remote.api
+
+import com.app.episodic.BuildConfig
+import com.app.episodic.tv.data.remote.models.TvDto
+import com.app.episodic.utils.K
+import retrofit2.http.GET
+import retrofit2.http.Query
+
+interface TvApiService {
+
+    @GET("discover/tv")
+    suspend fun fetchDiscoverTv(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = "es-MX"
+    ): TvDto
+}
+

@@ -34,10 +34,9 @@ fun SearchResultItem(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .pointerInput(item.mediaType) {
-                if (item.mediaType == "movie") {
-                    detectTapGestures {
-                        onClick(item.id, item.mediaType)
-                    }
+                detectTapGestures {
+                    // Permitir click tanto para movies como para TV
+                    onClick(item.id, item.mediaType)
                 }
             },
         verticalAlignment = Alignment.CenterVertically,
