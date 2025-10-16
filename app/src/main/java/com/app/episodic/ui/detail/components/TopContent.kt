@@ -1,4 +1,4 @@
-package com.app.tmdb_app.ui.detail.components
+package com.app.episodic.ui.detail.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,13 +29,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.app.tmdb_app.movie_detail.domain.models.MovieDetail
+import com.app.episodic.movie_detail.domain.models.MovieDetail
 import com.app.episodic.ui.home.components.MovieCard
 import com.app.episodic.ui.home.defaultPadding
 import com.app.episodic.ui.home.itemSpacing
-import com.app.tmdb_app.utils.K
-import com.app.tmdb_app.R
-import com.app.tmdb_app.ui.theme.primaryLightHighContrast
+import com.app.episodic.utils.K
+import com.app.episodic.R
+import com.app.episodic.ui.theme.primaryLightHighContrast
 
 @Composable
 fun DetailTopContent(

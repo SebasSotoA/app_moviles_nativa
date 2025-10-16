@@ -19,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.episodic.ui.components.LoadingView
-import com.app.tmdb_app.ui.detail.components.DetailBodyContent
-import com.app.tmdb_app.ui.detail.components.DetailTopContent
+import com.app.episodic.ui.detail.components.DetailBodyContent
+import com.app.episodic.ui.detail.components.DetailTopContent
 
 @Composable
 fun MovieDetailScreen(

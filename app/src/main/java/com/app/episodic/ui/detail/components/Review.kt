@@ -1,4 +1,4 @@
-package com.app.tmdb_app.ui.detail.components
+package com.app.episodic.ui.detail.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +17,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.app.tmdb_app.movie_detail.domain.models.Review
+import com.app.episodic.movie_detail.domain.models.Review
 import com.app.episodic.ui.components.CollapsibleText
 import com.app.episodic.ui.home.itemSpacing
 import kotlin.math.round

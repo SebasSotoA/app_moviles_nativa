@@ -1,4 +1,4 @@
-package com.app.tmdb_app.ui.detail.components
+package com.app.episodic.ui.detail.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,10 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.app.tmdb_app.movie_detail.domain.models.Cast
-import com.app.tmdb_app.utils.K
-import com.app.tmdb_app.R
-
+import com.app.episodic.movie_detail.domain.models.Cast
+import com.app.episodic.utils.K
+import com.app.episodic.R
 @Composable
 fun ActorItem(
     modifier: Modifier = Modifier,

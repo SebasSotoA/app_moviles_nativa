@@ -1,4 +1,4 @@
-package com.app.tmdb_app.ui.detail.components
+package com.app.episodic.ui.detail.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.LocalIndication
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
@@ -38,13 +39,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.app.tmdb_app.movie.domain.models.Movie
-import com.app.tmdb_app.movie_detail.domain.models.MovieDetail
-import com.app.tmdb_app.movie_detail.domain.models.Review
+import com.app.episodic.movie.domain.models.Movie
+import com.app.episodic.movie_detail.domain.models.MovieDetail
+import com.app.episodic.movie_detail.domain.models.Review
 import com.app.episodic.ui.home.components.MovieCard
 import com.app.episodic.ui.home.components.MovieCoverImage
 import com.app.episodic.ui.home.defaultPadding
 import com.app.episodic.ui.home.itemSpacing
+
 
 @Composable
 fun DetailBodyContent(
