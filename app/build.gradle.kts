@@ -26,7 +26,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.k11.episodic"
+        applicationId = "com.app.episodic"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
