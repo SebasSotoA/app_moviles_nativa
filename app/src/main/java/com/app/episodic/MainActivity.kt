@@ -11,21 +11,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.app.episodic.ui.navigation.MovieNavigationGraph
 import com.app.episodic.ui.theme.EpisodicTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             EpisodicTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                App()
             }
+        }
+    }
+
+    @Composable
+    fun App() {
+        val navController = rememberNavController()
+        Scaffold(modifier = Modifier.fillMaxSize()) {
+            MovieNavigationGraph(
+                navController = navController,
+                modifier = Modifier.padding(it)
+            )
         }
     }
 }
