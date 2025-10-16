@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.episodic.ui.lists.components.EmptyListsView
 import com.app.episodic.ui.lists.components.ListCard
+import com.app.episodic.ui.lists.components.ListCollectionCard
+import com.app.episodic.ui.lists.components.ListsHeaderRow
 import com.app.episodic.ui.lists.components.ListsTabs
 import com.app.episodic.ui.lists.components.ListsTopBar
 import com.app.episodic.ui.lists.components.RecentActivityHeader
@@ -26,6 +28,8 @@ object ListsScreenLabels {
     const val EMPTY_TITLE = "Todavía no tienes ninguna lista."
     const val EMPTY_SUBTITLE = "¡Hagamos una!"
     const val BUTTON_CREATE_LIST = "Crear una lista"
+    const val EMPTY_COLLECTIONS_TITLE = "Todavía no tienes ninguna lista."
+    const val EMPTY_COLLECTIONS_SUBTITLE = "¡Hagamos una!"
 }
 
 @Composable
@@ -41,31 +45,68 @@ fun ListsScreen(
         Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
             ListsTopBar(title = ListsScreenLabels.SCREEN_TITLE, onSearch = onOpenSearch)
             ListsTabs(selectedTab = state.tab, onTabSelected = viewModel::onChangeTab)
-            RecentActivityHeader(onSort = { /*TODO*/}, onFilter = { /*TODO*/})
-            Spacer(Modifier.height(12.dp))
-            if (state.recentItems.isEmpty()) {
-                EmptyListsView(
-                        title = ListsScreenLabels.EMPTY_TITLE,
-                        subtitle = ListsScreenLabels.EMPTY_SUBTITLE,
-                        onCreateList = {
-                            viewModel.onCreateListClick()
-                            onCreateList()
-                        }
-                )
-            } else {
-                LazyColumn(
-                        Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(state.recentItems.size) { idx ->
-                        val item = state.recentItems[idx]
-                        ListCard(
-                                item = item,
-                                onClick = { onOpenDetail(item.id) },
-                                onFavorite = { viewModel.onToggleFavorite(item.id) },
-                                onMore = { viewModel.onMoreClicked(item.id) }
+            
+            when (state.tab) {
+                ListsTab.FAVORITOS -> {
+                    RecentActivityHeader(onSort = { /*TODO*/}, onFilter = { /*TODO*/})
+                    Spacer(Modifier.height(12.dp))
+                    if (state.recentItems.isEmpty()) {
+                        EmptyListsView(
+                                title = ListsScreenLabels.EMPTY_TITLE,
+                                subtitle = ListsScreenLabels.EMPTY_SUBTITLE,
+                                onCreateList = {
+                                    viewModel.onCreateListClick()
+                                    onCreateList()
+                                }
                         )
+                    } else {
+                        LazyColumn(
+                                Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(state.recentItems.size) { idx ->
+                                val item = state.recentItems[idx]
+                                ListCard(
+                                        item = item,
+                                        onClick = { onOpenDetail(item.id) },
+                                        onFavorite = { viewModel.onToggleFavorite(item.id) },
+                                        onMore = { viewModel.onMoreClicked(item.id) }
+                                )
+                            }
+                        }
+                    }
+                }
+                ListsTab.LISTAS -> {
+                    ListsHeaderRow(onCreateListClick = {
+                        viewModel.onCreateListClick()
+                        onCreateList()
+                    })
+                    
+                    if (state.collections.isEmpty()) {
+                        EmptyListsView(
+                                title = ListsScreenLabels.EMPTY_COLLECTIONS_TITLE,
+                                subtitle = ListsScreenLabels.EMPTY_COLLECTIONS_SUBTITLE,
+                                onCreateList = {
+                                    viewModel.onCreateListClick()
+                                    onCreateList()
+                                }
+                        )
+                    } else {
+                        LazyColumn(
+                                Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(state.collections.size) { idx ->
+                                val collection = state.collections[idx]
+                                ListCollectionCard(
+                                        collection = collection,
+                                        onOpenCollection = { viewModel.onOpenCollection(it) },
+                                        onMoreClicked = { viewModel.onMoreClickedCollection(it) }
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -104,28 +145,88 @@ fun ListsScreen_NonEmptyPreview() {
     ListsScreenPreview(state = mockState)
 }
 
+@Preview(showBackground = true)
+@Composable
+fun ListsScreen_CollectionsPreview() {
+    val mockState =
+            ListsState(
+                    tab = ListsTab.LISTAS,
+                    collections = listOf(
+                            ListCollectionUi(1, "Terror", 2),
+                            ListCollectionUi(2, "Románticas", 4),
+                            ListCollectionUi(3, "Acción", 3)
+                    ),
+                    isLoading = false,
+                    error = null
+            )
+    ListsScreenPreview(state = mockState)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ListsScreen_EmptyCollectionsPreview() {
+    val mockState =
+            ListsState(
+                    tab = ListsTab.LISTAS,
+                    collections = emptyList(),
+                    isLoading = false,
+                    error = null
+            )
+    ListsScreenPreview(state = mockState)
+}
+
 @Composable
 private fun ListsScreenPreview(state: ListsState) {
     EpisodicTheme {
         Column(Modifier.fillMaxSize()) {
             ListsTopBar(ListsScreenLabels.SCREEN_TITLE) {}
             ListsTabs(selectedTab = state.tab, onTabSelected = {})
-            RecentActivityHeader(onSort = {}, onFilter = {})
-            Spacer(Modifier.height(12.dp))
-            if (state.recentItems.isEmpty()) {
-                EmptyListsView(
-                        title = ListsScreenLabels.EMPTY_TITLE,
-                        subtitle = ListsScreenLabels.EMPTY_SUBTITLE,
-                        onCreateList = {}
-                )
-            } else {
-                LazyColumn(
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(state.recentItems.size) { idx ->
-                        val item = state.recentItems[idx]
-                        ListCard(item = item, onClick = {}, onFavorite = {}, onMore = {})
+            
+            when (state.tab) {
+                ListsTab.FAVORITOS -> {
+                    RecentActivityHeader(onSort = {}, onFilter = {})
+                    Spacer(Modifier.height(12.dp))
+                    if (state.recentItems.isEmpty()) {
+                        EmptyListsView(
+                                title = ListsScreenLabels.EMPTY_TITLE,
+                                subtitle = ListsScreenLabels.EMPTY_SUBTITLE,
+                                onCreateList = {}
+                        )
+                    } else {
+                        LazyColumn(
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(state.recentItems.size) { idx ->
+                                val item = state.recentItems[idx]
+                                ListCard(item = item, onClick = {}, onFavorite = {}, onMore = {})
+                            }
+                        }
+                    }
+                }
+                ListsTab.LISTAS -> {
+                    ListsHeaderRow(onCreateListClick = {})
+                    
+                    if (state.collections.isEmpty()) {
+                        EmptyListsView(
+                                title = ListsScreenLabels.EMPTY_COLLECTIONS_TITLE,
+                                subtitle = ListsScreenLabels.EMPTY_COLLECTIONS_SUBTITLE,
+                                onCreateList = {}
+                        )
+                    } else {
+                        LazyColumn(
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(state.collections.size) { idx ->
+                                val collection = state.collections[idx]
+                                ListCollectionCard(
+                                        collection = collection,
+                                        onOpenCollection = {},
+                                        onMoreClicked = {}
+                                )
+                            }
+                        }
                     }
                 }
             }

@@ -9,6 +9,8 @@ sealed class Route {
     data class MyListsScreen(val route: String = "my_lists") : Route()
 
     data class Lists(val route: String = "lists") : Route()
+    
+    data class CreateList(val route: String = "create_list") : Route()
 
     // Detail Routes
     data class FilmScreen(

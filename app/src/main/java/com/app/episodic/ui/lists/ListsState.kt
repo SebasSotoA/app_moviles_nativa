@@ -6,6 +6,7 @@ import androidx.compose.runtime.Immutable
 data class ListsState(
         val tab: ListsTab = ListsTab.FAVORITOS,
         val recentItems: List<ListItemUi> = emptyList(),
+        val collections: List<ListCollectionUi> = emptyList(),
         val isLoading: Boolean = false,
         val error: String? = null
 )
@@ -24,4 +25,11 @@ data class ListItemUi(
         val posterUrl: String?,
         val rating: Double,
         val isFavorite: Boolean
+)
+
+@Immutable
+data class ListCollectionUi(
+        val id: Int,
+        val name: String,
+        val itemsCount: Int
 )

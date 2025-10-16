@@ -18,6 +18,7 @@ import com.app.episodic.ui.detail.MovieDetailScreen
 import com.app.episodic.ui.explore.ExploreScreen
 import com.app.episodic.ui.home.HomeScreen
 import com.app.episodic.ui.lists.ListsScreen
+import com.app.episodic.ui.lists.create.CreateListScreen
 import com.app.episodic.ui.mylists.MyListsScreen
 import com.app.episodic.utils.K
 
@@ -95,7 +96,23 @@ fun EpisodicNavigationGraph(
                 )
             }
 
-            composable(Route.Lists().route) { ListsScreen() }
+            composable(Route.Lists().route) { 
+                ListsScreen(
+                    onCreateList = {
+                        navController.navigate(Route.CreateList().route)
+                    }
+                )
+            }
+            
+            composable(Route.CreateList().route) {
+                CreateListScreen(
+                    onClose = { navController.popBackStack() },
+                    onCreated = { newName ->
+                        navController.popBackStack()
+                        // TODO: Mostrar snackbar de éxito
+                    }
+                )
+            }
 
             // Detail Screen
             composable(

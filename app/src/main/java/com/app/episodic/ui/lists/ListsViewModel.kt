@@ -5,18 +5,29 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @HiltViewModel
 class ListsViewModel @Inject constructor() : ViewModel() {
 
     private val _state = MutableStateFlow(ListsState())
-    val state: StateFlow<ListsState> = _state
+    val state: StateFlow<ListsState> = _state.asStateFlow()
 
     fun onToggleFavorite(id: Int) {}
 
     fun onMoreClicked(id: Int) {}
 
-    fun onCreateListClick() {}
+    fun onCreateListClick() {
+        // Esta función será manejada por el callback en la UI
+    }
+
+    fun onMoreClickedCollection(collectionId: Int) {
+        // TODO: Implementar menú de opciones para colección
+    }
+
+    fun onOpenCollection(collectionId: Int) {
+        // TODO: Navegar a la colección específica
+    }
 
     fun onChangeTab(tab: ListsTab) {
         _state.value = _state.value.copy(tab = tab)
@@ -66,5 +77,16 @@ class ListsViewModel @Inject constructor() : ViewModel() {
                                         )
                                 )
                 )
+    }
+
+    fun loadMockCollections() {
+        _state.value = _state.value.copy(
+                collections = listOf(
+                        ListCollectionUi(1, "Terror", 2),
+                        ListCollectionUi(2, "Románticas", 4),
+                        ListCollectionUi(3, "Acción", 3),
+                        ListCollectionUi(4, "Comedia", 5)
+                )
+        )
     }
 }
