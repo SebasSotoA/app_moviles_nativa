@@ -1,4 +1,4 @@
-package com.k11.episodic.ui.theme
+package com.app.episodic.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

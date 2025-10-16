@@ -22,7 +22,7 @@ if (localPropertiesFile.exists()) {
 val apiKey = properties.getProperty("API_KEY")
 
 android {
-    namespace = "com.k11.episodic"
+    namespace = "com.app.episodic"
     compileSdk = 36
 
     defaultConfig {

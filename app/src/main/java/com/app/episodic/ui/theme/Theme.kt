@@ -1,4 +1,4 @@
-package com.k11.episodic.ui.theme
+package com.app.episodic.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

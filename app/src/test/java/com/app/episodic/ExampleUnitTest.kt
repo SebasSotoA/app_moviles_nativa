@@ -1,4 +1,4 @@
-package com.k11.episodic
+package com.app.episodic
 
 import org.junit.Test
 
