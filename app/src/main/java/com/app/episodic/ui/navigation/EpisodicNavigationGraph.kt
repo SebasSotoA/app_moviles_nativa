@@ -73,6 +73,10 @@ fun EpisodicNavigationGraph(
                         ) {
                             launchSingleTop = true
                         }
+                    },
+                    onNavigateToHome = {
+                        // Limpiar búsqueda cuando se navega a Home
+                        // Esto se manejará en HomeScreen
                     }
                 )
             }

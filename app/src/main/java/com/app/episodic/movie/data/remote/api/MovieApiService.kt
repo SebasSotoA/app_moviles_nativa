@@ -5,6 +5,7 @@ import com.app.episodic.movie.data.remote.models.MovieDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 import com.app.episodic.BuildConfig
+import com.app.episodic.movie.data.remote.models.SearchMultiDto
 
 interface MovieApiService {
 
@@ -17,6 +18,15 @@ interface MovieApiService {
     @GET(K.TRENDING_MOVIE_ENDPOINT)
     suspend fun fetchTrendingMovie(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
-        @Query("language") language: String = "es-ES"
+        @Query("language") language: String = "es-MX"
     ): MovieDto
+
+    @GET(K.SEARCH_MULTI_ENDPOINT)
+    suspend fun searchMulti(
+        @Query("query") query: String,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = "es-MX",
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("page") page: Int = 1
+    ): SearchMultiDto
 }

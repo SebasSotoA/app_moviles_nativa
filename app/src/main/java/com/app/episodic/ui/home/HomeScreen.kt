@@ -39,7 +39,8 @@ val itemSpacing = 8.dp
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
-    onMovieClick: (id: Int) -> Unit
+    onMovieClick: (id: Int) -> Unit,
+    onNavigateToHome: () -> Unit = {}
 ) {
     var isAutoScrolling by remember {
         mutableStateOf(true)
@@ -49,6 +50,12 @@ fun HomeScreen(
     }
     
     val state by homeViewModel.homeState.collectAsStateWithLifecycle()
+    
+    // Limpiar búsqueda cuando se navega a Home
+    LaunchedEffect(Unit) {
+        homeViewModel.clearSearch()
+    }
+    
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { state.discoverMovies.size }
@@ -72,9 +79,14 @@ fun HomeScreen(
         // Header with search bar and app title
         HomeHeader(
             searchText = searchText,
-            onSearchTextChange = { searchText = it },
+            onSearchTextChange = {
+                searchText = it
+                if (it.isEmpty()) {
+                    homeViewModel.search("")
+                }
+            },
             onSearchClick = {
-                // TODO: Implement search functionality
+                homeViewModel.search(searchText)
             },
             onFilterClick = {
                 // TODO: Implement filter functionality
@@ -93,50 +105,63 @@ fun HomeScreen(
             }
             if (!state.isLoading && state.error == null) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    // Carrusel principal de películas
-                    Box(modifier = Modifier.weight(0.4f)) {
-                        HorizontalPager(
-                            state = pagerState,
-                            contentPadding = PaddingValues(defaultPadding),
-                            pageSize = PageSize.Fill,
-                            pageSpacing = itemSpacing
-                        ) { page ->
-                            if (isAutoScrolling) {
-                                AnimatedContent(
-                                    targetState = page,
-                                    label = "",
-                                ) { index ->
-                                    TopContent(
-                                        modifier = Modifier.fillMaxSize(),
-                                        movie = state.discoverMovies[index],
-                                        onMovieClick = onMovieClick
-                                    )
-                                }
-                            } else {
-                                TopContent(
-                                    modifier = Modifier.fillMaxSize(),
-                                    movie = state.discoverMovies[page],
-                                    onMovieClick = onMovieClick
+                    if (state.isSearching) {
+                        androidx.compose.foundation.lazy.LazyColumn {
+                            items(state.searchResults.size) { idx ->
+                                com.app.episodic.ui.home.components.SearchResultItem(
+                                    item = state.searchResults[idx],
+                                    onClick = { id, mediaType ->
+                                        if (mediaType == "movie") onMovieClick(id)
+                                    }
                                 )
                             }
                         }
-                    }
-                    
-                    // Carrusel de géneros
-                    GenreButtons(
-                        modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
-                        onGenreClick = { _ ->
-                            // TODO: Implementar navegación a películas por género
+                    } else {
+                        // Carrusel principal de películas
+                        Box(modifier = Modifier.weight(0.4f)) {
+                            HorizontalPager(
+                                state = pagerState,
+                                contentPadding = PaddingValues(defaultPadding),
+                                pageSize = PageSize.Fill,
+                                pageSpacing = itemSpacing
+                            ) { page ->
+                                if (isAutoScrolling) {
+                                    AnimatedContent(
+                                        targetState = page,
+                                        label = "",
+                                    ) { index ->
+                                        TopContent(
+                                            modifier = Modifier.fillMaxSize(),
+                                            movie = state.discoverMovies[index],
+                                            onMovieClick = onMovieClick
+                                        )
+                                    }
+                                } else {
+                                    TopContent(
+                                        modifier = Modifier.fillMaxSize(),
+                                        movie = state.discoverMovies[page],
+                                        onMovieClick = onMovieClick
+                                    )
+                                }
+                            }
                         }
-                    )
-                    
-                    // Contenido principal
-                    BodyContent(
-                        modifier = Modifier.weight(0.6f),
-                        discoverMovies = state.discoverMovies,
-                        trendingMovies = state.trendingMovies,
-                        onMovieClick = onMovieClick
-                    )
+                        
+                        // Carrusel de géneros
+                        GenreButtons(
+                            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
+                            onGenreClick = { _ ->
+                                // TODO: Implementar navegación a películas por género
+                            }
+                        )
+                        
+                        // Contenido principal
+                        BodyContent(
+                            modifier = Modifier.weight(0.6f),
+                            discoverMovies = state.discoverMovies,
+                            trendingMovies = state.trendingMovies,
+                            onMovieClick = onMovieClick
+                        )
+                    }
                 }
             }
         }

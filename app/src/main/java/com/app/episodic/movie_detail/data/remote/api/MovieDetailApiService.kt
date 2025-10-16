@@ -3,6 +3,7 @@ package com.app.episodic.movie_detail.data.remote.api
 import com.app.episodic.BuildConfig
 import com.app.episodic.movie.data.remote.models.MovieDto
 import com.app.episodic.movie_detail.data.remote.models.MovieDetailDto
+import com.app.episodic.movie_detail.data.remote.models.TvDetailMinDto
 import com.app.episodic.utils.K
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -27,5 +28,12 @@ interface MovieDetailApiService {
         @Query("language") language: String = "es-MX",
         @Query("include_adult") includeAdult: Boolean = false
     ): MovieDto
+
+    @GET("${K.TV_DETAIL_ENDPOINT}/{$MOVIE_ID}")
+    suspend fun fetchTvDetailMin(
+        @Path(MOVIE_ID) tvId: Int,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = "es-MX",
+    ): TvDetailMinDto
 
 }
