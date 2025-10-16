@@ -40,6 +40,7 @@ fun BodyContent(
                 ) {
                     Text(
                         text = "Descubrir Películas",
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
@@ -67,6 +68,7 @@ fun BodyContent(
                 ) {
                     Text(
                         text = "En Tendencia",
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
