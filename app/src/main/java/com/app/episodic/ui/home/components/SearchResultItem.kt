@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.app.episodic.movie.domain.models.SearchItem
 import com.app.episodic.utils.K
+import com.app.episodic.utils.LanguageConstants
 
 @Composable
 fun SearchResultItem(
@@ -63,6 +64,7 @@ fun SearchResultItem(
             val duration = item.durationMinutes?.let { "$it Minutos" } ?: "—"
             val genre = item.genre ?: "—"
             val type = if (item.mediaType == "movie") "Película" else "Serie"
+            val language = item.originalLanguage?.let { LanguageConstants.getLanguageNameByCode(it) } ?: "—"
 
             // Línea 1: Año
             Text(
@@ -72,9 +74,9 @@ fun SearchResultItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            // Línea 2: Duración
+            // Línea 2: Duración • Idioma
             Text(
-                text = duration,
+                text = "$duration • $language",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,

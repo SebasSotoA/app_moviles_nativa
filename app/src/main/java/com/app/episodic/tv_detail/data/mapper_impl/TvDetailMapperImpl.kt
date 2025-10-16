@@ -6,6 +6,7 @@ import com.app.episodic.tv_detail.domain.models.Cast
 import com.app.episodic.tv_detail.domain.models.NextEpisodeToAir
 import com.app.episodic.tv_detail.domain.models.Review
 import com.app.episodic.tv_detail.domain.models.TvDetail
+import com.app.episodic.utils.LanguageConstants
 
 class TvDetailMapperImpl : ApiMapper<TvDetail, TvDetailDto> {
     override fun mapToDomain(apiDto: TvDetailDto): TvDetail {
@@ -37,7 +38,9 @@ class TvDetailMapperImpl : ApiMapper<TvDetail, TvDetailDto> {
                     )
                 }
             } ?: emptyList(),
-            language = apiDto.spokenLanguages?.mapNotNull { it?.englishName ?: it?.name } ?: emptyList(),
+            language = apiDto.spokenLanguages?.mapNotNull { lang ->
+                lang?.let { LanguageConstants.getLanguageNameByCodeOrEnglish(it.iso6391 ?: "", it.englishName) }
+            } ?: emptyList(),
             productionCountry = apiDto.productionCountries?.mapNotNull { it?.name } ?: emptyList(),
             reviews = apiDto.reviews?.results?.mapNotNull { reviewDto ->
                 reviewDto?.let {

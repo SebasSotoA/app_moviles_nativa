@@ -6,6 +6,7 @@ import com.app.episodic.movie_detail.data.remote.models.MovieDetailDto
 import com.app.episodic.movie_detail.domain.models.Cast
 import com.app.episodic.movie_detail.domain.models.MovieDetail
 import com.app.episodic.movie_detail.domain.models.Review
+import com.app.episodic.utils.LanguageConstants
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -26,8 +27,9 @@ class MovieDetailMapperImpl : ApiMapper<MovieDetail, MovieDetailDto> {
             voteCount = apiDto.voteCount ?: 0,
             video = apiDto.video ?: false,
             cast = formatCast(apiDto.credits?.cast),
-            language = apiDto.spokenLanguages?.map { formatEmptyValue(it?.englishName) }
-                ?: emptyList(),
+            language = apiDto.spokenLanguages?.mapNotNull { lang ->
+                lang?.let { LanguageConstants.getLanguageNameByCodeOrEnglish(it.iso6391 ?: "", it.englishName) }
+            } ?: emptyList(),
             productionCountry = apiDto.productionCountries?.map { formatEmptyValue(it?.name) }
                 ?: emptyList(),
             reviews = apiDto.reviews?.results?.map {

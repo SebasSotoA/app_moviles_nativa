@@ -44,6 +44,7 @@ import com.app.episodic.movie.domain.models.Movie
 import com.app.episodic.ui.home.defaultPadding
 import com.app.episodic.ui.home.itemSpacing
 import com.app.episodic.utils.K
+import com.app.episodic.utils.LanguageConstants
 import com.app.episodic.R
 import java.text.DecimalFormat
 
@@ -179,19 +180,7 @@ fun TopContent(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     // Idioma y información (izquierda)
-                    val language = when (movie.originalLanguage.lowercase()) {
-                        "en" -> "Inglés"
-                        "es" -> "Español"
-                        "fr" -> "Francés"
-                        "de" -> "Alemán"
-                        "it" -> "Italiano"
-                        "pt" -> "Portugués"
-                        "ru" -> "Ruso"
-                        "ja" -> "Japonés"
-                        "ko" -> "Coreano"
-                        "zh" -> "Chino"
-                        else -> movie.originalLanguage.uppercase()
-                    }
+                    val language = LanguageConstants.getLanguageNameByCode(movie.originalLanguage)
                     
                     // Información adicional: votos y popularidad
                     val additionalInfo = if (movie.voteCount > 1000) {

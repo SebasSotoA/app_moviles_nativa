@@ -8,6 +8,7 @@ data class SearchItem(
     val year: String?,
     val durationMinutes: Int?,
     val genre: String?,
+    val originalLanguage: String?, // Para mostrar idioma
 )
 
 

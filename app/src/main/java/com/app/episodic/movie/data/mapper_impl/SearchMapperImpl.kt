@@ -18,7 +18,8 @@ class SearchMapperImpl : ApiMapper<List<SearchItem>, SearchMultiDto> {
                     posterPath = result.posterPath,
                     year = year,
                     durationMinutes = null,
-                    genre = null
+                    genre = null,
+                    originalLanguage = result.originalLanguage
                 )
             }
     }
