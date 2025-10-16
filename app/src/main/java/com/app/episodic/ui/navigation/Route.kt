@@ -1,6 +1,6 @@
-package com.app.tmdb_app.ui.navigation
+package com.app.episodic.ui.navigation
 
-import com.app.tmdb_app.utils.K
+import com.app.episodic.utils.K
 
 sealed class Route {
     data class HomeScreen(val route: String = "homeScreen") : Route()

@@ -1,4 +1,4 @@
-package com.app.tmdb_app.ui.navigation
+package com.app.episodic.ui.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.app.episodic.ui.detail.MovieDetailScreen
 import com.app.episodic.ui.home.HomeScreen
-import com.app.tmdb_app.utils.K
+import com.app.episodic.utils.K
 
 @Composable
 fun MovieNavigationGraph(
