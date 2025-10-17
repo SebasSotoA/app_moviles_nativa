@@ -20,6 +20,8 @@ fun MyListsScreen(
     modifier: Modifier = Modifier,
     onMovieClick: (Int) -> Unit = {}
 ) {
+    // TODO: Implementar funcionalidad cuando se conecte con el backend
+    onMovieClick
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
