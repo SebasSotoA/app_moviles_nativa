@@ -4,6 +4,7 @@ import com.app.episodic.utils.K
 
 sealed class Route {
     // Bottom Navigation Routes
+    data class Splash(val route: String = "splash") : Route()
     data class HomeScreen(val route: String = "home") : Route()
     data class ExploreScreen(val route: String = "explore") : Route()
     data class MyListsScreen(val route: String = "my_lists") : Route()

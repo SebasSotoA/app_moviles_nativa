@@ -20,6 +20,7 @@ import com.app.episodic.ui.home.HomeScreen
 import com.app.episodic.ui.lists.ListsScreen
 import com.app.episodic.ui.lists.create.CreateListScreen
 import com.app.episodic.ui.mylists.MyListsScreen
+import com.app.episodic.ui.splash.SplashScreen
 import com.app.episodic.utils.K
 
 @Composable
@@ -62,9 +63,20 @@ fun EpisodicNavigationGraph(
     ) { innerPadding ->
         NavHost(
                 navController = navController,
-                startDestination = Route.HomeScreen().route,
+                startDestination = Route.Splash().route,
                 modifier = modifier.fillMaxSize().padding(innerPadding)
         ) {
+            // Splash Screen
+            composable(route = Route.Splash().route) {
+                SplashScreen(
+                    onFinished = {
+                        navController.navigate(Route.HomeScreen().route) {
+                            popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
             // Bottom Navigation Screens
             composable(route = Route.HomeScreen().route) {
                 HomeScreen(
