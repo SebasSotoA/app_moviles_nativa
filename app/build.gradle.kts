@@ -63,6 +63,10 @@ kotlin {
 }
 
 dependencies {
+    implementation("androidx.core:core-splashscreen:1.0.1")
+}
+
+dependencies {
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
 

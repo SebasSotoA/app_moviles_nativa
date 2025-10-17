@@ -19,5 +19,13 @@ interface TvApiService {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
         @Query("language") language: String = "es-MX"
     ): TvDto
+
+    @GET("discover/tv")
+    suspend fun fetchTvByGenre(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("with_genres") genreId: Int,
+        @Query("language") language: String = "es-MX",
+        @Query("page") page: Int = 1
+    ): TvDto
 }
 

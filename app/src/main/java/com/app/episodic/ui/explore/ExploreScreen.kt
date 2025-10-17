@@ -20,6 +20,7 @@ import com.app.episodic.ui.explore.components.ExploreGrid
 import com.app.episodic.ui.explore.components.ExploreHeader
 import com.app.episodic.ui.explore.components.ExploreNavigationTabs
 import com.app.episodic.ui.explore.components.ExploreTab
+import com.app.episodic.ui.explore.components.GenreGrid
 import com.app.episodic.ui.theme.EpisodicTheme
 
 @Composable
@@ -28,7 +29,8 @@ fun ExploreScreen(
     exploreViewModel: ExploreViewModel = hiltViewModel(),
     onMovieClick: (Int) -> Unit = {},
     onTvClick: (Int) -> Unit = {},
-    onSearchClick: () -> Unit = {}
+    onSearchClick: () -> Unit = {},
+    onGenreClick: (Int) -> Unit = {}
 ) {
     val state by exploreViewModel.exploreState.collectAsStateWithLifecycle()
     
@@ -63,12 +65,19 @@ fun ExploreScreen(
                 
                 !state.isLoading -> {
                     Column {
-                        // Header del contenido con "Popular" y botones
-                        ExploreContentHeader(
-                            onSortClick = exploreViewModel::onSortClick,
-                            onFilterClick = exploreViewModel::onFilterClick
-                        )
-                        
+                        // Header del contenido solo para Películas y Series
+                        when (state.selectedTab) {
+                            ExploreTab.PELICULAS, ExploreTab.SERIES -> {
+                                ExploreContentHeader(
+                                    onSortClick = exploreViewModel::onSortClick,
+                                    onFilterClick = exploreViewModel::onFilterClick
+                                )
+                            }
+                            ExploreTab.GENEROS -> {
+                                // En Géneros no se muestra "Popular" ni filtros
+                            }
+                        }
+
                         // Grid de contenido
                         when (state.selectedTab) {
                             ExploreTab.PELICULAS -> {
@@ -84,18 +93,9 @@ fun ExploreScreen(
                                 )
                             }
                             ExploreTab.GENEROS -> {
-                                // TODO: Implementar vista de géneros
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "Géneros próximamente",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
+                                GenreGrid(
+                                    onGenreClick = onGenreClick
+                                )
                             }
                         }
                     }

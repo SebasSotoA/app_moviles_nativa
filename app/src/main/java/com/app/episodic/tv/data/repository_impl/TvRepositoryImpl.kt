@@ -33,6 +33,16 @@ class TvRepositoryImpl(
     }.catch { e ->
         emit(Response.Error(e))
     }
+
+    override fun fetchTvByGenre(genreId: Int): Flow<Response<List<Tv>>> = flow {
+        emit(Response.Loading())
+        val tvDto = tvApiService.fetchTvByGenre(genreId = genreId)
+        apiMapper.mapToDomain(tvDto).apply {
+            emit(Response.Success(this))
+        }
+    }.catch { e ->
+        emit(Response.Error(e))
+    }
 }
 
 

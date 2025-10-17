@@ -27,4 +27,8 @@ object GenreConstants {
     fun getGenreNameById(id: Int): String {
         return genreMap[id] ?: "Unknown"
     }
+    
+    fun getGenreIdByName(name: String): Int? {
+        return genreMap.entries.find { it.value == name }?.key
+    }
 }

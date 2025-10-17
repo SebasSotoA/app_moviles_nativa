@@ -30,7 +30,8 @@ fun TvDetailScreen(
     tvDetailViewModel: TvDetailViewModel = hiltViewModel(),
     onNavigateUp: () -> Unit,
     onTvClick: (Int) -> Unit = {},
-    onActorClick: (Int) -> Unit = {}
+    onActorClick: (Int) -> Unit = {},
+    onAddToList: (com.app.episodic.tv_detail.domain.models.TvDetail) -> Unit = {}
 ) {
     val state by tvDetailViewModel.tvDetailState.collectAsStateWithLifecycle()
     
@@ -68,6 +69,7 @@ fun TvDetailScreen(
                         fetchTvShows = tvDetailViewModel::fetchTvShows,
                         onTvClick = onTvClick,
                         onActorClick = onActorClick,
+                        onAddToListClick = { onAddToList(tvDetail) },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .height(bodyItemHeight)

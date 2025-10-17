@@ -54,7 +54,10 @@ fun MovieNavigationGraph(
                         popUpTo(navController.graph.findStartDestination().id) { inclusive = false }
                     }
                 },
-                onActorClick = {}
+                onActorClick = {},
+                onAddToList = { movieDetail ->
+                    // Opcional: navegación local si este grafo se usa
+                }
             )
         }
     }

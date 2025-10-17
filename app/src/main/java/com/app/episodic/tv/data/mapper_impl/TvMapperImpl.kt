@@ -27,4 +27,3 @@ class TvMapperImpl : ApiMapper<List<Tv>, TvDto> {
         } ?: emptyList()
     }
 }
-

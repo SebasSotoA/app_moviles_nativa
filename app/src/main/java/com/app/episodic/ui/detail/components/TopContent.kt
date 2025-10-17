@@ -8,40 +8,69 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import android.widget.Toast
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.app.episodic.favorites.domain.models.FavoriteItem
+import com.app.episodic.favorites.presentation.viewmodel.FavoritesViewModel
 import com.app.episodic.movie_detail.domain.models.MovieDetail
 import com.app.episodic.ui.home.components.MovieCard
 import com.app.episodic.ui.home.defaultPadding
 import com.app.episodic.ui.home.itemSpacing
 import com.app.episodic.utils.K
+import com.app.episodic.utils.GenreConstants
 import com.app.episodic.R
 import com.app.episodic.ui.theme.primaryLightHighContrast
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun DetailTopContent(
     modifier: Modifier = Modifier,
-    movieDetail: MovieDetail
+    movieDetail: MovieDetail,
+    favoritesViewModel: FavoritesViewModel = hiltViewModel()
 ) {
+    val isFavorite by favoritesViewModel.isFavorite.collectAsStateWithLifecycle()
+    val toastMessage by favoritesViewModel.toastMessage.collectAsStateWithLifecycle()
+    val isMovieFavorite = isFavorite[movieDetail.id] ?: false
+    val context = LocalContext.current
+    
+    LaunchedEffect(movieDetail.id) {
+        favoritesViewModel.checkIfFavorite(movieDetail.id)
+    }
+    
+    LaunchedEffect(toastMessage) {
+        toastMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            favoritesViewModel.clearToastMessage()
+        }
+    }
+    
     val imgRequest = ImageRequest.Builder(LocalContext.current)
         .data("${K.BASE_IMAGE_URL}${movieDetail.posterPath}")
         .crossfade(true)
@@ -58,15 +87,44 @@ fun DetailTopContent(
             },
             placeholder = painterResource(id = R.drawable.bg_image_movie)
         )
+        
+        // Botón de favorito en la esquina superior derecha
+        IconButton(
+            onClick = {
+                val favoriteItem = FavoriteItem(
+                    id = movieDetail.id,
+                    title = movieDetail.title,
+                    originalTitle = movieDetail.originalTitle,
+                    posterPath = movieDetail.posterPath,
+                    genreIds = movieDetail.genreIds.map { genreName ->
+                        // Convertir nombre de género a ID usando GenreConstants
+                        GenreConstants.getGenreIdByName(genreName) ?: 0
+                    }.filter { it != 0 },
+                    voteAverage = movieDetail.voteAverage,
+                    isMovie = true
+                )
+                favoritesViewModel.toggleFavorite(favoriteItem)
+            },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = if (isMovieFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = if (isMovieFavorite) "Quitar de favoritos" else "Agregar a favoritos",
+                tint = if (isMovieFavorite) Color.Red else Color.White,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        
         MovieDetailComponent(
             rating = movieDetail.voteAverage,
             releaseDate = movieDetail.releaseDate,
+            reviewCount = movieDetail.reviews.size,
             modifier = Modifier
                 .align(Alignment.BottomStart)
         )
     }
-
-
 }
 
 @Composable
@@ -74,6 +132,7 @@ private fun MovieDetailComponent(
     modifier: Modifier = Modifier,
     rating: Double,
     releaseDate: String,
+    reviewCount: Int,
 ) {
     Column(modifier) {
         MovieCard(
@@ -108,42 +167,33 @@ private fun MovieDetailComponent(
 
             }
         }
-        Row(
+        
+        // Mostrar cantidad de reviews
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = defaultPadding)
+                .padding(horizontal = defaultPadding, vertical = 8.dp),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFF175e38).copy(alpha = 0.85f),
+                contentColor = Color(0xFFE8F5E8)
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            Card(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(topStart = 30.dp, bottomStart = 30.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "play")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Mirar Ahora")
-                }
+                Text(
+                    text = "$reviewCount reseña(s)",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFFE8F5E8)
+                )
             }
-            Card(
-                onClick = { /*TODO*/ },
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White,
-                    contentColor = primaryLightHighContrast
-                ),
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(topEnd = 30.dp, bottomEnd = 30.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Icon(imageVector = Icons.Filled.Movie, contentDescription = "play")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Mirar Trailer")
-                }
-            }
-
         }
     }
 

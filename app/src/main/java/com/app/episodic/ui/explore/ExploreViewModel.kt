@@ -43,7 +43,7 @@ class ExploreViewModel @Inject constructor(
                 }
             }
             ExploreTab.GENEROS -> {
-                // TODO: Implementar carga de géneros
+                // Los géneros se cargan estáticamente, no necesitan carga adicional
             }
         }
     }
@@ -111,6 +111,14 @@ class ExploreViewModel @Inject constructor(
     fun dismissFilterDialog() {
         _exploreState.update { it.copy(showFilterDialog = false) }
     }
+    
+    fun onGenreClick(genreId: Int) {
+        // TODO: Implementar navegación a películas/series por género
+        // Por ahora solo actualizamos el estado para futuras implementaciones
+        _exploreState.update { 
+            it.copy(selectedGenre = genreId) 
+        }
+    }
 }
 
 data class ExploreState(
@@ -120,5 +128,6 @@ data class ExploreState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val showSortDialog: Boolean = false,
-    val showFilterDialog: Boolean = false
+    val showFilterDialog: Boolean = false,
+    val selectedGenre: Int? = null
 )

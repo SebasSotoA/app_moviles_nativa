@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.Episodic" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- SplashScreen para Android 12+ -->
+    <style name="Theme.Episodic.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#000000</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+        <item name="postSplashScreenTheme">@style/Theme.Episodic</item>
+    </style>
 </resources>

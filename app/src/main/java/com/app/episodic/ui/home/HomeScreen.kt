@@ -41,7 +41,8 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
     onMovieClick: (id: Int) -> Unit,
     onTvClick: (id: Int) -> Unit = {},
-    onNavigateToHome: () -> Unit = {}
+    onNavigateToHome: () -> Unit = {},
+    onGenreSelected: (genreId: Int) -> Unit = {}
 ) {
     var isAutoScrolling by remember {
         mutableStateOf(true)
@@ -154,8 +155,9 @@ fun HomeScreen(
                         // Carrusel de géneros
                         GenreButtons(
                             modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
-                            onGenreClick = { _ ->
-                                // TODO: Implementar navegación a películas por género
+                            onGenreClick = { idString ->
+                                val id = idString.toIntOrNull()
+                                if (id != null) onGenreSelected(id)
                             }
                         )
                         

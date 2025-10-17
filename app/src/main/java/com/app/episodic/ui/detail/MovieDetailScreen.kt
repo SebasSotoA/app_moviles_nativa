@@ -28,7 +28,8 @@ fun MovieDetailScreen(
     movieDetailViewMode: DetailViewModel = hiltViewModel(),
     onNavigateUp: () -> Unit,
     onMovieClick: (Int) -> Unit,
-    onActorClick: (Int) -> Unit
+    onActorClick: (Int) -> Unit,
+    onAddToList: (com.app.episodic.movie_detail.domain.models.MovieDetail) -> Unit
 ) {
     val state by movieDetailViewMode.detailState.collectAsStateWithLifecycle()
     Box(modifier = modifier.fillMaxWidth()) {
@@ -61,6 +62,7 @@ fun MovieDetailScreen(
                         fetchMovies = movieDetailViewMode::fetchMovie,
                         onMovieClick = onMovieClick,
                         onActorClick = onActorClick,
+                        onAddToListClick = { onAddToList(movieDetail) },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .height(bodyItemHeight)

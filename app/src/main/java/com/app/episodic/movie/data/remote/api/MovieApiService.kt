@@ -29,4 +29,12 @@ interface MovieApiService {
         @Query("include_adult") includeAdult: Boolean = false,
         @Query("page") page: Int = 1
     ): SearchMultiDto
+
+    @GET(K.MOVIE_ENDPOINT)
+    suspend fun fetchMoviesByGenre(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("with_genres") genreId: Int,
+        @Query("language") language: String = "es-MX",
+        @Query("page") page: Int = 1
+    ): MovieDto
 }

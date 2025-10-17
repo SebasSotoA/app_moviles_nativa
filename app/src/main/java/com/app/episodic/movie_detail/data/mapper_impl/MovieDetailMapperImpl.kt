@@ -76,7 +76,7 @@ class MovieDetailMapperImpl : ApiMapper<MovieDetail, MovieDetailDto> {
 
     private fun formatCast(castDto: List<CastDto?>?): List<Cast> {
         return castDto?.map {
-            val genderRole = if (it?.gender == 2) "Actor" else "Actress"
+            val genderRole = if (it?.gender == 2) "Actor" else "Actriz"
             Cast(
                 id = it?.id ?: 0,
                 name = formatEmptyValue(it?.name),

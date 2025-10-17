@@ -3,6 +3,7 @@ package com.app.episodic.movie_detail.data.remote.api
 import com.app.episodic.BuildConfig
 import com.app.episodic.movie.data.remote.models.MovieDto
 import com.app.episodic.movie_detail.data.remote.models.MovieDetailDto
+import com.app.episodic.movie_detail.data.remote.models.ReviewsDto
 import com.app.episodic.movie_detail.data.remote.models.TvDetailMinDto
 import com.app.episodic.utils.K
 import retrofit2.http.GET
@@ -35,5 +36,13 @@ interface MovieDetailApiService {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
         @Query("language") language: String = "es-MX",
     ): TvDetailMinDto
+
+    @GET("${K.MOVIE_DETAIL_ENDPOINT}/{$MOVIE_ID}/reviews")
+    suspend fun fetchMovieReviews(
+        @Path(MOVIE_ID) movieId: Int,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = "es-MX",
+        @Query("page") page: Int = 1
+    ): ReviewsDto
 
 }

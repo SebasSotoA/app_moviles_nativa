@@ -33,4 +33,14 @@ class MovieRepositoryImpl(
     }.catch { e ->
         emit(Response.Error(e))
     }
+
+    override fun fetchMoviesByGenre(genreId: Int): Flow<Response<List<Movie>>> = flow {
+        emit(Response.Loading())
+        val movieDto = movieApiService.fetchMoviesByGenre(genreId = genreId)
+        apiMapper.mapToDomain(movieDto).apply {
+            emit(Response.Success(this))
+        }
+    }.catch { e ->
+        emit(Response.Error(e))
+    }
 }

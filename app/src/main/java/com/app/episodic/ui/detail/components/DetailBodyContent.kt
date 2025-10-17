@@ -9,17 +9,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -56,6 +57,7 @@ fun DetailBodyContent(
     fetchMovies: () -> Unit,
     onMovieClick: (Int) -> Unit,
     onActorClick: (Int) -> Unit,
+    onAddToListClick: () -> Unit,
 ) {
     LazyColumn(modifier) {
         item {
@@ -68,7 +70,7 @@ fun DetailBodyContent(
                         .fillMaxWidth()
                         .padding(defaultPadding)
                 ) {
-                    Row(
+                        Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
@@ -77,26 +79,29 @@ fun DetailBodyContent(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            movieDetail.genreIds.forEachIndexed { index, genreText ->
+                            val shownGenres = movieDetail.genreIds.take(2)
+                            shownGenres.forEachIndexed { index, genreText ->
                                 Text(
                                     text = genreText,
                                     modifier = Modifier
                                         .padding(6.dp),
                                     maxLines = 1,
-                                    style = MaterialTheme.typography.bodySmall
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Medium
                                 )
                                 // Show divider after all except the last item
-                                if (index < movieDetail.genreIds.lastIndex) {
+                                if (index < shownGenres.lastIndex) {
                                     Text(
                                         text = " • ",
-                                        style = MaterialTheme.typography.bodySmall
+                                        style = MaterialTheme.typography.titleMedium
                                     )
                                 }
                             }
                         }
                         Text(
                             text = movieDetail.runTime,
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Medium
                         )
                     }
                     Spacer(modifier = Modifier.height(itemSpacing))
@@ -111,17 +116,38 @@ fun DetailBodyContent(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Spacer(modifier = Modifier.height(itemSpacing))
+                    // Botón de Mi Lista
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        ActionIcon.entries.forEachIndexed { index, actionIcon ->
-                            ActionIconBtn(
-                                icon = actionIcon.icon,
-                                contentDescription = actionIcon.contentDescription,
-                                bgColor = if (index == ActionIcon.entries.lastIndex)
-                                    MaterialTheme.colorScheme.primaryContainer
-                                else Color.Black.copy(
-                                    .5f
-                                )
+                        Card(
+                            onClick = onAddToListClick,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(30.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFF175e38),
+                                contentColor = Color(0xFFE8F5E8)
                             )
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Bookmark,
+                                    contentDescription = "Agregar a Mi Lista",
+                                    modifier = Modifier.size(20.dp),
+                                    tint = Color(0xFFE8F5E8)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "+ Mi lista",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFE8F5E8)
+                                )
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(itemSpacing))
@@ -160,18 +186,20 @@ fun DetailBodyContent(
                     }
                     Spacer(modifier = Modifier.height(itemSpacing))
 
+                    Spacer(modifier = Modifier.height(16.dp))
                     MovieInfoItem(
                         infoItem = movieDetail.language,
-                        title = "Spoken language",
+                        title = "Idiomas",
                     )
-                    Spacer(modifier = Modifier.height(itemSpacing))
-                    MovieInfoItem(
-                        infoItem = movieDetail.productionCountry,
-                        title = "Production countries",
+                    
+                    ProductionCountriesItem(
+                        countries = movieDetail.productionCountry,
+                        title = "Países de producción",
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
                     Spacer(modifier = Modifier.height(itemSpacing))
                     Text(
-                        text = "Reviews",
+                        text = "Reseñas",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -226,30 +254,37 @@ fun MoreLikeThis(
 
 }
 
-private enum class ActionIcon(val icon: ImageVector, val contentDescription: String) {
-    BookMark(icon = Icons.Default.Bookmark, "bookmark"),
-    Share(icon = Icons.Default.Share, "Share"),
-    Download(icon = Icons.Default.Download, "Download"),
-}
 
 @Composable
-private fun ActionIconBtn(
-    modifier: Modifier = Modifier,
-    icon: ImageVector,
-    contentDescription: String? = null,
-    bgColor: Color = Color.Black.copy(.8f)
-) {
-    MovieCard(
-        shapes = CircleShape,
-        modifier = modifier
-            .padding(4.dp),
-        bgColor = bgColor
+private fun ProductionCountriesItem(countries: List<String>, title: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            modifier = Modifier.padding(4.dp)
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            countries.forEachIndexed { index, country ->
+                Text(
+                    text = translateCountryToSpanish(country),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (index < countries.size - 1) {
+                    Text(
+                        text = "•",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -261,7 +296,7 @@ private fun MovieInfoItem(infoItem: List<String>, title: String) {
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.width(4.dp))
@@ -275,6 +310,92 @@ private fun MovieInfoItem(infoItem: List<String>, title: String) {
     }
 }
 
+private fun translateCountryToSpanish(country: String): String {
+    return when (country.lowercase()) {
+        "united states of america", "usa", "us" -> "Estados Unidos"
+        "united kingdom", "uk" -> "Reino Unido"
+        "canada" -> "Canadá"
+        "france" -> "Francia"
+        "germany" -> "Alemania"
+        "spain" -> "España"
+        "italy" -> "Italia"
+        "japan" -> "Japón"
+        "china" -> "China"
+        "australia" -> "Australia"
+        "brazil" -> "Brasil"
+        "mexico" -> "México"
+        "argentina" -> "Argentina"
+        "india" -> "India"
+        "south korea" -> "Corea del Sur"
+        "russia" -> "Rusia"
+        "netherlands" -> "Países Bajos"
+        "sweden" -> "Suecia"
+        "norway" -> "Noruega"
+        "denmark" -> "Dinamarca"
+        "finland" -> "Finlandia"
+        "poland" -> "Polonia"
+        "czech republic" -> "República Checa"
+        "hungary" -> "Hungría"
+        "romania" -> "Rumania"
+        "bulgaria" -> "Bulgaria"
+        "greece" -> "Grecia"
+        "turkey" -> "Turquía"
+        "israel" -> "Israel"
+        "south africa" -> "Sudáfrica"
+        "egypt" -> "Egipto"
+        "morocco" -> "Marruecos"
+        "tunisia" -> "Túnez"
+        "algeria" -> "Argelia"
+        "libya" -> "Libia"
+        "sudan" -> "Sudán"
+        "ethiopia" -> "Etiopía"
+        "kenya" -> "Kenia"
+        "nigeria" -> "Nigeria"
+        "ghana" -> "Ghana"
+        "senegal" -> "Senegal"
+        "ivory coast" -> "Costa de Marfil"
+        "cameroon" -> "Camerún"
+        "congo" -> "Congo"
+        "uganda" -> "Uganda"
+        "tanzania" -> "Tanzania"
+        "zimbabwe" -> "Zimbabue"
+        "botswana" -> "Botsuana"
+        "namibia" -> "Namibia"
+        "zambia" -> "Zambia"
+        "malawi" -> "Malaui"
+        "mozambique" -> "Mozambique"
+        "madagascar" -> "Madagascar"
+        "mauritius" -> "Mauricio"
+        "seychelles" -> "Seychelles"
+        "comoros" -> "Comoras"
+        "djibouti" -> "Yibuti"
+        "somalia" -> "Somalia"
+        "eritrea" -> "Eritrea"
+        "chad" -> "Chad"
+        "niger" -> "Níger"
+        "mali" -> "Malí"
+        "burkina faso" -> "Burkina Faso"
+        "guinea" -> "Guinea"
+        "sierra leone" -> "Sierra Leona"
+        "liberia" -> "Liberia"
+        "gambia" -> "Gambia"
+        "guinea-bissau" -> "Guinea-Bisáu"
+        "cape verde" -> "Cabo Verde"
+        "são tomé and príncipe" -> "Santo Tomé y Príncipe"
+        "equatorial guinea" -> "Guinea Ecuatorial"
+        "gabon" -> "Gabón"
+        "central african republic" -> "República Centroafricana"
+        "democratic republic of the congo" -> "República Democrática del Congo"
+        "angola" -> "Angola"
+        "burundi" -> "Burundi"
+        "rwanda" -> "Ruanda"
+        "lesotho" -> "Lesoto"
+        "swaziland" -> "Suazilandia"
+        "south sudan" -> "Sudán del Sur"
+        else -> country // Si no se encuentra traducción, mantener el nombre original
+    }
+}
+
 @Composable
 private fun Review(
     modifier: Modifier = Modifier,
@@ -283,21 +404,35 @@ private fun Review(
     val (viewMore, setViewMore) = remember {
         mutableStateOf(false)
     }
-    // show only three reviews or less by default
-    val defaultReview =
-        if (reviews.size > 3) reviews.take(3) else reviews
-    // show more when user needs more review
-    val movieReviews = if (viewMore) reviews else defaultReview
-    val btnText = if (viewMore) "Colapsar" else "Más..."
+    
     Column(modifier) {
-        movieReviews.forEach { review ->
-            ReviewItem(review = review)
-            Spacer(modifier = Modifier.height(itemSpacing))
-            HorizontalDivider(modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(itemSpacing))
-        }
-        TextButton(onClick = { setViewMore(!viewMore) }) {
-            Text(text = btnText)
+        if (reviews.isEmpty()) {
+            Text(
+                text = "No hay reseñas disponibles",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(2.dp)
+            )
+        } else {
+            // show only three reviews or less by default
+            val defaultReview =
+                if (reviews.size > 3) reviews.take(3) else reviews
+            // show more when user needs more review
+            val movieReviews = if (viewMore) reviews else defaultReview
+            val btnText = if (viewMore) "Colapsar" else "Más..."
+            
+            movieReviews.forEach { review ->
+                ReviewItem(review = review)
+                Spacer(modifier = Modifier.height(itemSpacing))
+                HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier.height(itemSpacing))
+            }
+            
+            if (reviews.size > 3) {
+                TextButton(onClick = { setViewMore(!viewMore) }) {
+                    Text(text = btnText)
+                }
+            }
         }
     }
 

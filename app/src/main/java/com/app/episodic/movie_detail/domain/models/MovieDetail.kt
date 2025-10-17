@@ -29,8 +29,8 @@ data class Cast(
     val profilePath: String?,
 ) {
     private val nameParts = name.split(" ", limit = 2)
-    val firstName = nameParts[0]
-    val lastName = nameParts[1]
+    val firstName = nameParts.getOrElse(0) { name }
+    val lastName = nameParts.getOrElse(1) { "" }
 }
 
 data class Review(

@@ -21,6 +21,9 @@ import com.app.episodic.movie_detail.domain.models.Review
 import com.app.episodic.ui.components.CollapsibleText
 import com.app.episodic.ui.home.itemSpacing
 import kotlin.math.round
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun ReviewItem(
@@ -31,7 +34,7 @@ fun ReviewItem(
         val nameAnnotatedString = buildAnnotatedString {
             append(review.author)
             append(" • ")
-            append(review.createdAt)
+            append(formatDate(review.createdAt))
         }
         val ratingAnnotatedString = buildAnnotatedString {
             // Apply bold style to "6/"
@@ -61,4 +64,21 @@ fun ReviewItem(
         }
     }
 
+}
+
+private fun formatDate(dateString: String): String {
+    return try {
+        // Parse the input date (assuming it's in ISO format like "2023-12-25T10:30:00.000Z")
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = inputFormat.parse(dateString)
+        outputFormat.format(date ?: Date())
+    } catch (e: Exception) {
+        // If parsing fails, try to extract just the date part
+        if (dateString.contains("T")) {
+            dateString.substring(0, dateString.indexOf("T"))
+        } else {
+            dateString
+        }
+    }
 }
