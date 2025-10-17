@@ -58,6 +58,9 @@ fun AddToListScreen(
     LaunchedEffect(toastMessage) {
         toastMessage?.let { message ->
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            if (message == "Agregado a la lista") {
+                onClose()
+            }
             viewModel.clearToastMessage()
         }
     }
@@ -134,7 +137,6 @@ fun AddToListScreen(
                             customList = list,
                             onListClick = { listId ->
                                 viewModel.addItemToList(listId, itemToAdd)
-                                onClose()
                             },
                             onRenameClick = { listId ->
                                 // TODO: Implementar renombrar

@@ -183,9 +183,7 @@ fun EpisodicNavigationGraph(
                     onMovieClick = { movieId ->
                         navController.navigate(
                             Route.FilmScreen().getRouteWithArgs(id = movieId)
-                        ) {
-                            launchSingleTop = true
-                        }
+                        )
                     },
                     onActorClick = {
                         // TODO: Implementar navegación a perfil de actor
@@ -251,9 +249,7 @@ fun EpisodicNavigationGraph(
                     onTvClick = { id ->
                         navController.navigate(
                             Route.TvDetailScreen().getRouteWithArgs(id = id)
-                        ) {
-                            launchSingleTop = true
-                        }
+                        )
                     },
                     onActorClick = {
                         // TODO: Implementar navegación a perfil de actor
