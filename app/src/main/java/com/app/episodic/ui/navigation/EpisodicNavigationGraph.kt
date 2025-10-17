@@ -97,6 +97,13 @@ fun EpisodicNavigationGraph(
                         ) {
                             launchSingleTop = true
                         }
+                    },
+                    onTvClick = { tvId ->
+                        navController.navigate(
+                            Route.TvDetailScreen().getRouteWithArgs(id = tvId)
+                        ) {
+                            launchSingleTop = true
+                        }
                     }
                 )
             }

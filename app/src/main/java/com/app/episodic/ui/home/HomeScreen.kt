@@ -164,7 +164,10 @@ fun HomeScreen(
                             modifier = Modifier.weight(0.6f),
                             discoverMovies = state.discoverMovies,
                             trendingMovies = state.trendingMovies,
-                            onMovieClick = onMovieClick
+                            discoverTvShows = state.discoverTvShows,
+                            trendingTvShows = state.trendingTvShows,
+                            onMovieClick = onMovieClick,
+                            onTvClick = onTvClick
                         )
                     }
                 }

@@ -46,7 +46,7 @@ fun CollapsibleText(
             modifier = Modifier
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = LocalIndication.current
+                    indication = null
                 ) { isExpanded = !isExpanded },
             maxLines = if (isExpanded) Int.MAX_VALUE else collapsedMaxLines,
             overflow = TextOverflow.Ellipsis,
@@ -57,7 +57,7 @@ fun CollapsibleText(
             modifier = Modifier
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = LocalIndication.current
+                    indication = null
                 ) { isExpanded = !isExpanded },
             overflow = TextOverflow.Ellipsis,
             style = style

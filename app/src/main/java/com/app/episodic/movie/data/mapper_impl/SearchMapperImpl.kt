@@ -8,6 +8,7 @@ class SearchMapperImpl : ApiMapper<List<SearchItem>, SearchMultiDto> {
     override fun mapToDomain(apiDto: SearchMultiDto): List<SearchItem> {
         return apiDto.results
             .filter { it.mediaType == "movie" || it.mediaType == "tv" }
+            .filter { it.posterPath != null && it.posterPath.isNotEmpty() }
             .map { result ->
                 val title = result.title ?: result.name ?: ""
                 val year = (result.releaseDate ?: result.firstAirDate)?.take(4)

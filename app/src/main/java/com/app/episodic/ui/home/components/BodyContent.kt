@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import com.app.episodic.movie.domain.models.Movie
+import com.app.episodic.tv.domain.models.Tv
 import com.app.episodic.ui.home.itemSpacing
 
 @Composable
@@ -26,7 +27,10 @@ fun BodyContent(
     modifier: Modifier = Modifier,
     discoverMovies: List<Movie>,
     trendingMovies: List<Movie>,
-    onMovieClick: (id: Int) -> Unit
+    discoverTvShows: List<Tv>,
+    trendingTvShows: List<Tv>,
+    onMovieClick: (id: Int) -> Unit,
+    onTvClick: (id: Int) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
         item {
@@ -84,6 +88,66 @@ fun BodyContent(
                         MovieCoverImage(
                             movie = it,
                             onMovieClick = onMovieClick,
+                        )
+                    }
+                }
+                
+                // Sección de Series - Descubrir
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(itemSpacing),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Descubrir Series",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                            contentDescription = "Descubre nuevas series"
+                        )
+                    }
+                }
+                LazyRow {
+                    items(discoverTvShows) {
+                        TvCoverImage(
+                            tv = it,
+                            onTvClick = onTvClick,
+                        )
+                    }
+                }
+                
+                // Sección de Series - En Tendencia
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = itemSpacing),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Series en Tendencia",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                            contentDescription = "Series en tendencia"
+                        )
+                    }
+                }
+                LazyRow {
+                    items(trendingTvShows) {
+                        TvCoverImage(
+                            tv = it,
+                            onTvClick = onTvClick,
                         )
                     }
                 }

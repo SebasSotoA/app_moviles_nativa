@@ -46,6 +46,7 @@ import com.app.episodic.tv_detail.domain.models.TvDetail
 import com.app.episodic.ui.tv_detail.components.TvActorItem
 import com.app.episodic.ui.home.components.MovieCard
 import com.app.episodic.ui.home.components.MovieCoverImage
+import com.app.episodic.ui.home.components.TvCoverImage
 import com.app.episodic.ui.home.defaultPadding
 import com.app.episodic.ui.home.itemSpacing
 
@@ -178,7 +179,7 @@ fun TvDetailBodyContent(
                     )
                     Spacer(modifier = Modifier.height(itemSpacing))
                     Text(
-                        text = "Reseñas",
+                        text = "Reviews",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -289,15 +290,7 @@ fun MoreLikeThisTv(
                 }
             }
             items(tvShows) { tvShow ->
-                // TODO: Crear TvCoverImage similar a MovieCoverImage
-                Text(
-                    text = tvShow.name,
-                    modifier = Modifier.pointerInput(tvShow.id) {
-                        detectTapGestures {
-                            onTvClick(tvShow.id)
-                        }
-                    }
-                )
+                TvCoverImage(tv = tvShow, onTvClick = onTvClick)
             }
         }
     }

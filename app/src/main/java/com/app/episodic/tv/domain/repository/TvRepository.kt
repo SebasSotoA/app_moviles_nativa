@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface TvRepository {
     fun fetchDiscoverTv(): Flow<Response<List<Tv>>>
+    fun fetchTrendingTv(): Flow<Response<List<Tv>>>
 }
 
 

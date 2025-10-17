@@ -6,6 +6,8 @@ import com.app.episodic.movie.domain.models.Movie
 import com.app.episodic.movie.domain.models.SearchItem
 import com.app.episodic.movie.domain.repository.MovieRepository
 import com.app.episodic.movie.domain.repository.SearchRepository
+import com.app.episodic.tv.domain.models.Tv
+import com.app.episodic.tv.domain.repository.TvRepository
 import com.app.episodic.utils.collectAndHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: MovieRepository,
+    private val tvRepository: TvRepository,
     private val searchRepository: SearchRepository,
 ) : ViewModel() {
     private val _homeState = MutableStateFlow(HomeState())
@@ -24,9 +27,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchDiscoverMovie()
-    }
-    init {
         fetchTrendingMovie()
+        fetchDiscoverTvShows()
+        fetchTrendingTvShows()
     }
 
 
@@ -67,6 +70,44 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun fetchDiscoverTvShows() = viewModelScope.launch {
+        tvRepository.fetchDiscoverTv().collectAndHandle(
+            onError = { error ->
+                _homeState.update {
+                    it.copy(isLoading = false, error = error?.message)
+                }
+            },
+            onLoading = {
+                _homeState.update {
+                    it.copy(isLoading = true, error = null)
+                }
+            }
+        ) { tvShows ->
+            _homeState.update {
+                it.copy(isLoading = false, error = null, discoverTvShows = tvShows)
+            }
+        }
+    }
+
+    private fun fetchTrendingTvShows() = viewModelScope.launch {
+        tvRepository.fetchTrendingTv().collectAndHandle(
+            onError = { error ->
+                _homeState.update {
+                    it.copy(isLoading = false, error = error?.message)
+                }
+            },
+            onLoading = {
+                _homeState.update {
+                    it.copy(isLoading = true, error = null)
+                }
+            }
+        ) { tvShows ->
+            _homeState.update {
+                it.copy(isLoading = false, error = null, trendingTvShows = tvShows)
+            }
+        }
+    }
+
     fun search(query: String) = viewModelScope.launch {
         if (query.isBlank()) {
             _homeState.update { it.copy(searchResults = emptyList(), isSearching = false) }
@@ -101,6 +142,8 @@ class HomeViewModel @Inject constructor(
 data class HomeState(
     val discoverMovies: List<Movie> = emptyList(),
     val trendingMovies: List<Movie> = emptyList(),
+    val discoverTvShows: List<Tv> = emptyList(),
+    val trendingTvShows: List<Tv> = emptyList(),
     val searchResults: List<SearchItem> = emptyList(),
     val isSearching: Boolean = false,
     val error: String? = null,

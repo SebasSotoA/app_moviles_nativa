@@ -13,5 +13,11 @@ interface TvApiService {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
         @Query("language") language: String = "es-MX"
     ): TvDto
+
+    @GET("trending/tv/week")
+    suspend fun fetchTrendingTv(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = "es-MX"
+    ): TvDto
 }
 

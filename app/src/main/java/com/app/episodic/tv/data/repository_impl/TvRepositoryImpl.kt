@@ -23,6 +23,16 @@ class TvRepositoryImpl(
     }.catch { e ->
         emit(Response.Error(e))
     }
+
+    override fun fetchTrendingTv(): Flow<Response<List<Tv>>> = flow {
+        emit(Response.Loading())
+        val tvDto = tvApiService.fetchTrendingTv()
+        apiMapper.mapToDomain(tvDto).apply {
+            emit(Response.Success(this))
+        }
+    }.catch { e ->
+        emit(Response.Error(e))
+    }
 }
 
 

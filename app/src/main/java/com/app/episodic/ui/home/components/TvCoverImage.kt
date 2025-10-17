@@ -1,8 +1,6 @@
 package com.app.episodic.ui.home.components
 
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,30 +14,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.app.episodic.movie.domain.models.Movie
+import com.app.episodic.tv.domain.models.Tv
 import com.app.episodic.ui.home.itemSpacing
 import com.app.episodic.utils.K
 
 
 @Composable
-fun MovieCoverImage(
+fun TvCoverImage(
     modifier: Modifier = Modifier,
-    movie: Movie,
-    onMovieClick:(Int) -> Unit
+    tv: Tv,
+    onTvClick:(Int) -> Unit
 ) {
     val imgRequest = ImageRequest.Builder(LocalContext.current)
-        .data("${K.BASE_IMAGE_URL}${movie.posterPath}")
+        .data("${K.BASE_IMAGE_URL}${tv.posterPath}")
         .crossfade(true)
         .build()
 
@@ -47,10 +45,11 @@ fun MovieCoverImage(
         modifier = modifier
             .size(width = 150.dp, height = 250.dp)
             .padding(itemSpacing)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) { onMovieClick(movie.id) }
+            .pointerInput(tv.id) {
+                detectTapGestures {
+                    onTvClick(tv.id)
+                }
+            }
     ){
         AsyncImage(
             model = imgRequest,
@@ -69,7 +68,7 @@ fun MovieCoverImage(
         ) {
             Icon(
                 imageVector = Icons.Default.Bookmark,
-                contentDescription = "Bookmark",
+                contentDescription = "Marcador",
                 modifier = Modifier.padding(4.dp)
             )
         }
@@ -90,10 +89,10 @@ fun MovieCoverImage(
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
-                val displayTitle = if (movie.title.isNotEmpty() && movie.title != "Unknown title") {
-                    movie.title
+                val displayTitle = if (tv.name.isNotEmpty() && tv.name != "Unknown title") {
+                    tv.name
                 } else {
-                    movie.originalTitle
+                    tv.originalName
                 }
                 
                 Text(
