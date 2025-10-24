@@ -246,8 +246,8 @@ fun MoreLikeThis(
                     CircularProgressIndicator()
                 }
             }
-            items(movies) {
-                MovieCoverImage(movie = it, onMovieClick = onMovieClick)
+            items(movies) { movie ->
+                MovieCoverImage(movie = movie, onMovieClick = onMovieClick)
             }
         }
     }
@@ -300,9 +300,9 @@ private fun MovieInfoItem(infoItem: List<String>, title: String) {
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.width(4.dp))
-        infoItem.forEach {
+        infoItem.forEach { language ->
             Text(
-                text = it,
+                text = language,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Bold
             )
