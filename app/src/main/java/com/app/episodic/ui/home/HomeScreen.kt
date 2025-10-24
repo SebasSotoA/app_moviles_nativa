@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.episodic.ui.components.LoadingView
@@ -98,8 +99,9 @@ fun HomeScreen(
         // Main content
         Box(modifier = Modifier.weight(1f)) {
             if (state.error != null) {
+                val errorText = state.error ?: stringResource(id = com.app.episodic.R.string.error_unknown)
                 Text(
-                    text = state.error ?: "unknown error",
+                    text = errorText,
                     color = MaterialTheme.colorScheme.error,
                     maxLines = 2,
                     modifier = Modifier.padding(16.dp)

@@ -1,3 +1,55 @@
 <resources>
     <string name="app_name">episodic</string>
+
+    <!-- Géneros -->
+    <string name="genre_action">Acción</string>
+    <string name="genre_adventure">Aventura</string>
+    <string name="genre_animation">Animación</string>
+    <string name="genre_comedy">Comedia</string>
+    <string name="genre_crime">Crimen</string>
+    <string name="genre_documentary">Documental</string>
+    <string name="genre_drama">Drama</string>
+    <string name="genre_family">Familiar</string>
+    <string name="genre_fantasy">Fantasía</string>
+    <string name="genre_history">Historia</string>
+    <string name="genre_horror">Terror</string>
+    <string name="genre_music">Música</string>
+    <string name="genre_mystery">Misterio</string>
+    <string name="genre_romance">Romance</string>
+    <string name="genre_scifi">Ciencia ficción</string>
+    <string name="genre_tv_movie">Película de TV</string>
+    <string name="genre_thriller">Suspenso</string>
+    <string name="genre_war">Guerra</string>
+    <string name="genre_western">Oeste</string>
+    <string name="genre_unknown">Unknown</string>
+
+    <!-- Etiquetas usadas por mappers -->
+    <string name="unknown_format">Unknown %1$s</string>
+    <string name="label_language">language</string>
+    <string name="label_title">title</string>
+    <string name="label_overview">overview</string>
+    <string name="label_date">date</string>
+
+    <!-- Roles -->
+    <string name="actor_male">Actor</string>
+    <string name="actor_female">Actriz</string>
+
+    <!-- Errores -->
+    <string name="error_unknown">Error desconocido</string>
+    <string name="error_network">Error de conexión</string>
+    <string name="no_genre">Sin género</string>
+    <string name="other">Otro</string>
+    <string name="nav_back">Atrás</string>
+    <string name="type_movie">Película</string>
+    <string name="type_series">Serie</string>
+    <string name="favorite">Favorito</string>
+    <string name="more_options">Más opciones</string>
+    <string name="remove_from_favorites">Eliminar de favoritos</string>
+    <string name="information">Información</string>
+    <string name="list_label">Lista</string>
+    <string name="elements_count">%1$d elemento(s)</string>
+    <string name="empty_list">No hay elementos en esta lista</string>
+    <string name="options">Opciones</string>
+    <string name="delete">Eliminar</string>
+    <string name="minutes_format">%1$d Minutos</string>
 </resources>

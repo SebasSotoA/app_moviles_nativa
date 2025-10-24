@@ -47,6 +47,8 @@ import com.app.episodic.favorites.domain.models.FavoriteItem
 import com.app.episodic.movie.domain.models.Movie
 import com.app.episodic.tv.domain.models.Tv
 import com.app.episodic.utils.GenreConstants
+import androidx.compose.ui.res.stringResource
+import com.app.episodic.R
 import com.app.episodic.utils.K
 
 
@@ -64,7 +66,7 @@ fun FavoriteCard(
     val genreName = if (favoriteItem.genreIds.isNotEmpty()) {
         GenreConstants.getGenreNameById(favoriteItem.genreIds.first())
     } else {
-        "Sin género"
+        stringResource(id = R.string.no_genre)
     }
     
     Card(
@@ -132,7 +134,7 @@ fun FavoriteCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (favoriteItem.isMovie) "Película" else "Serie",
+                        text = if (favoriteItem.isMovie) stringResource(id = R.string.type_movie) else stringResource(id = R.string.type_series),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -161,7 +163,7 @@ fun FavoriteCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Botón de favorito
-                IconButton(
+                    IconButton(
                     onClick = { 
                         isFavorite = !isFavorite
                         onFavoriteToggle(favoriteItem.id)
@@ -169,7 +171,7 @@ fun FavoriteCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Favorite,
-                        contentDescription = "Favorito",
+                        contentDescription = stringResource(id = R.string.favorite),
                         tint = if (isFavorite) MaterialTheme.colorScheme.primary 
                                else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
@@ -183,7 +185,7 @@ fun FavoriteCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
-                            contentDescription = "Más opciones",
+                            contentDescription = stringResource(id = R.string.more_options),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -193,14 +195,14 @@ fun FavoriteCard(
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Eliminar de favoritos") },
+                            text = { Text(stringResource(id = R.string.remove_from_favorites)) },
                             onClick = {
                                 showMenu = false
                                 onRemoveFromFavorites(favoriteItem.id)
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Información") },
+                            text = { Text(stringResource(id = R.string.information)) },
                             onClick = {
                                 showMenu = false
                                 onInfoClick(favoriteItem.id)

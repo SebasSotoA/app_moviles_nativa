@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.app.episodic.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,23 +38,23 @@ fun GenreButtons(
     onGenreClick: (genreId: String) -> Unit = {}
 ) {
     val genres = listOf(
-        GenreButton("28", "Acción"),
-        GenreButton("18", "Drama"),
-        GenreButton("35", "Comedia"),
-        GenreButton("10749", "Romance"),
-        GenreButton("27", "Terror"),
-        GenreButton("878", "Ciencia Ficción"),
-        GenreButton("53", "Suspenso"),
-        GenreButton("16", "Animación"),
-        GenreButton("12", "Aventura"),
-        GenreButton("80", "Crimen"),
-        GenreButton("99", "Documental"),
-        GenreButton("14", "Fantasía"),
-        GenreButton("36", "Historia"),
-        GenreButton("10402", "Música"),
-        GenreButton("9648", "Misterio"),
-        GenreButton("10751", "Familia"),
-        GenreButton("37", "Western")
+        GenreButton("28", stringResource(id = R.string.genre_action)),
+        GenreButton("18", stringResource(id = R.string.genre_drama)),
+        GenreButton("35", stringResource(id = R.string.genre_comedy)),
+        GenreButton("10749", stringResource(id = R.string.genre_romance)),
+        GenreButton("27", stringResource(id = R.string.genre_horror)),
+        GenreButton("878", stringResource(id = R.string.genre_scifi)),
+        GenreButton("53", stringResource(id = R.string.genre_thriller)),
+        GenreButton("16", stringResource(id = R.string.genre_animation)),
+        GenreButton("12", stringResource(id = R.string.genre_adventure)),
+        GenreButton("80", stringResource(id = R.string.genre_crime)),
+        GenreButton("99", stringResource(id = R.string.genre_documentary)),
+        GenreButton("14", stringResource(id = R.string.genre_fantasy)),
+        GenreButton("36", stringResource(id = R.string.genre_history)),
+        GenreButton("10402", stringResource(id = R.string.genre_music)),
+        GenreButton("9648", stringResource(id = R.string.genre_mystery)),
+        GenreButton("10751", stringResource(id = R.string.genre_family)),
+        GenreButton("37", stringResource(id = R.string.genre_western))
     )
 
     var selectedGenre by remember { mutableStateOf<String?>(null) } // Sin selección por defecto

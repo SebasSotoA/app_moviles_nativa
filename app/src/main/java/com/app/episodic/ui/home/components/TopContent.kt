@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -207,7 +208,11 @@ private fun TopContentPreview() {
         TopContent(
             movie = Movie(
                 backdropPath = "",
-                genreIds = listOf("Acción", "Aventura", "Fantasía"),
+                genreIds = listOf(
+                    stringResource(id = com.app.episodic.R.string.genre_action),
+                    stringResource(id = com.app.episodic.R.string.genre_adventure),
+                    stringResource(id = com.app.episodic.R.string.genre_fantasy)
+                ),
                 id = 1,
                 originalLanguage = "en",
                 originalTitle = "Doctor Strange",

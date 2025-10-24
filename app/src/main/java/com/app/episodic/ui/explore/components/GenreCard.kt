@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.app.episodic.utils.K
+import androidx.compose.ui.res.stringResource
+import com.app.episodic.R
 
 data class GenreItem(
     val id: Int,
@@ -128,13 +130,13 @@ fun GenreCard(
 @Composable
 fun GenreCardPreview() {
     MaterialTheme {
-        GenreCard(
-            genre = GenreItem(
-                id = 28,
-                name = "Acción",
-                icon = Icons.Default.LocalFireDepartment,
-                posterPath = "/poster.jpg"
+            GenreCard(
+                genre = GenreItem(
+                    id = 28,
+                    name = stringResource(id = R.string.genre_action),
+                    icon = Icons.Default.LocalFireDepartment,
+                    posterPath = "/poster.jpg"
+                )
             )
-        )
     }
 }

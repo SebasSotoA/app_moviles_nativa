@@ -14,6 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
+import com.app.episodic.R
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,8 +39,9 @@ fun MovieDetailScreen(
             state.error != null,
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
+            val errorText = state.error ?: stringResource(id = R.string.error_unknown)
             Text(
-                state.error ?: "unknown",
+                errorText,
                 color = MaterialTheme.colorScheme.error,
                 maxLines = 2
             )
@@ -71,7 +74,7 @@ fun MovieDetailScreen(
             }
         }
         IconButton(onClick = onNavigateUp, modifier = Modifier.align(Alignment.TopStart)) {
-            Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
+            Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = stringResource(id = R.string.nav_back))
         }
     }
     LoadingView(isLoading = state.isLoading)

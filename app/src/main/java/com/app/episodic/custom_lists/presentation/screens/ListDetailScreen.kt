@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import androidx.compose.ui.res.stringResource
+import com.app.episodic.R
 import com.app.episodic.custom_lists.presentation.viewmodel.CustomListsViewModel
 import com.app.episodic.utils.K
 
@@ -62,13 +64,13 @@ fun ListDetailScreen(
                 title = {
                     Column {
                         Text(
-                            text = currentList?.name ?: "Lista",
+                            text = currentList?.name ?: stringResource(id = R.string.list_label),
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = "${items.size} elemento(s)",
+                            text = stringResource(id = R.string.elements_count, items.size),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -76,7 +78,7 @@ fun ListDetailScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(id = R.string.nav_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -87,14 +89,14 @@ fun ListDetailScreen(
         }
     ) { paddingValues ->
         if (items.isEmpty()) {
-            Box(
+                Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No hay elementos en esta lista",
+                    text = stringResource(id = R.string.empty_list),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -157,7 +159,7 @@ private fun ListDetailItem(
             )
             Spacer(modifier = androidx.compose.ui.Modifier.height(6.dp))
             Text(
-                text = if (isMovie) "Película" else "Serie",
+                text = if (isMovie) stringResource(id = R.string.type_movie) else stringResource(id = R.string.type_series),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
@@ -165,18 +167,18 @@ private fun ListDetailItem(
             )
         }
         IconButton(onClick = { showMenu = true }) {
-            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Opciones")
+            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = stringResource(id = R.string.options))
         }
         DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
             DropdownMenuItem(
-                text = { Text("Información") },
+                text = { Text(stringResource(id = R.string.information)) },
                 onClick = {
                     showMenu = false
                     onInfo(id, isMovie)
                 }
             )
             DropdownMenuItem(
-                text = { Text("Eliminar") },
+                text = { Text(stringResource(id = R.string.delete)) },
                 onClick = {
                     showMenu = false
                     onRemove(id)

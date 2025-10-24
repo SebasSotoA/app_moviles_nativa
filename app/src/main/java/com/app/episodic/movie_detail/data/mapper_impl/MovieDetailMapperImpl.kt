@@ -7,6 +7,8 @@ import com.app.episodic.movie_detail.domain.models.Cast
 import com.app.episodic.movie_detail.domain.models.MovieDetail
 import com.app.episodic.movie_detail.domain.models.Review
 import com.app.episodic.utils.LanguageConstants
+import com.app.MovieApplication
+import com.app.episodic.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -76,13 +78,24 @@ class MovieDetailMapperImpl : ApiMapper<MovieDetail, MovieDetailDto> {
     }
 
     private fun formatEmptyValue(value: String?, default: String = ""): String {
-        if (value.isNullOrEmpty()) return "Unknown $default"
-        return value
+        if (!value.isNullOrEmpty()) return value
+
+        val ctx = MovieApplication.appContext
+        val labelRes = when (default) {
+            "language" -> R.string.label_language
+            "title" -> R.string.label_title
+            "overview" -> R.string.label_overview
+            "date" -> R.string.label_date
+            else -> R.string.genre_unknown
+        }
+
+        return ctx.getString(R.string.unknown_format, ctx.getString(labelRes))
     }
 
     private fun formatCast(castDto: List<CastDto?>?): List<Cast> {
         return castDto?.map {
-            val genderRole = if (it?.gender == 2) "Actor" else "Actriz"
+            val ctx = MovieApplication.appContext
+            val genderRole = if (it?.gender == 2) ctx.getString(R.string.actor_male) else ctx.getString(R.string.actor_female)
             Cast(
                 id = it?.id ?: 0,
                 name = formatEmptyValue(it?.name),

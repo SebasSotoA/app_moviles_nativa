@@ -19,6 +19,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.app.episodic.R
 import coil.compose.rememberAsyncImagePainter
 import com.app.episodic.movie.domain.models.SearchItem
 import com.app.episodic.utils.K
@@ -61,9 +63,9 @@ fun SearchResultItem(
             )
             Spacer(modifier = Modifier.height(6.dp))
             val year = item.year ?: "—"
-            val duration = item.durationMinutes?.let { "$it Minutos" } ?: "—"
+            val duration = item.durationMinutes?.let { stringResource(id = R.string.minutes_format, it) } ?: "—"
             val genre = item.genre ?: "—"
-            val type = if (item.mediaType == "movie") "Película" else "Serie"
+            val type = if (item.mediaType == "movie") stringResource(id = R.string.type_movie) else stringResource(id = R.string.type_series)
             val language = item.originalLanguage?.let { LanguageConstants.getLanguageNameByCode(it) } ?: "—"
 
             // Línea 1: Año
