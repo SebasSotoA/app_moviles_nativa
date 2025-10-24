@@ -63,9 +63,15 @@ class MovieDetailMapperImpl : ApiMapper<MovieDetail, MovieDetailDto> {
         return formattedDate
     }
 
-    private fun convertMinutesToHours(minutes: Int): String {
-        val hours = minutes / 60
-        val remainingMinutes = minutes % 60
+    private fun convertMinutesToHours(totalMinutes: Int): String {
+        // Handle edge cases: negative values and zero
+        if (totalMinutes <= 0) {
+            return "0h:0m"
+        }
+        
+        val hours = totalMinutes / 60
+        val remainingMinutes = totalMinutes % 60
+        
         return "${hours}h:${remainingMinutes}m"
     }
 

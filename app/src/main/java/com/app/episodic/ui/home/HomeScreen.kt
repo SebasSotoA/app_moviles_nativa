@@ -109,9 +109,9 @@ fun HomeScreen(
                 Column(modifier = Modifier.fillMaxSize()) {
                     if (state.isSearching) {
                         LazyColumn {
-                            items(state.searchResults.size) { idx ->
+                            items(state.searchResults.size) { index ->
                                 SearchResultItem(
-                                    item = state.searchResults[idx],
+                                    item = state.searchResults[index],
                                     onClick = { id, mediaType ->
                                         if (mediaType == "movie") {
                                             onMovieClick(id)
