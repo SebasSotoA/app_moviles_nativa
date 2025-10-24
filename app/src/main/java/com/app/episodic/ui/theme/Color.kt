@@ -217,3 +217,9 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1B1B1C)
 val surfaceContainerDarkHighContrast = Color(0xFF201F20)
 val surfaceContainerHighDarkHighContrast = Color(0xFF2A2A2B)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF353436)
+
+// Loading Screen Colors
+val loadingPrimary = Color(0xFF6366F1) // Indigo suave
+val loadingSecondary = Color(0xFF8B5CF6) // Púrpura complementario
+val loadingBackground = Color(0xFFF8FAFC) // Fondo muy suave
+val loadingBackgroundDark = Color(0xFF1A1F3A) // Fondo oscuro
