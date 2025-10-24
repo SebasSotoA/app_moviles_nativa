@@ -18,8 +18,22 @@ fun ExploreGrid(
     movies: List<Movie> = emptyList(),
     tvShows: List<Tv> = emptyList(),
     onMovieClick: (Int) -> Unit = {},
-    onTvClick: (Int) -> Unit = {}
+    onTvClick: (Int) -> Unit = {},
+    minRating: Float = 0f
 ) {
+    // Filter lists based on rating
+    val filteredMovies = if (minRating > 0f) {
+        movies.filter { it.voteAverage >= minRating }
+    } else {
+        movies
+    }
+    
+    val filteredTvShows = if (minRating > 0f) {
+        tvShows.filter { it.voteAverage >= minRating }
+    } else {
+        tvShows
+    }
+    
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier.fillMaxWidth(),
@@ -28,7 +42,7 @@ fun ExploreGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Mostrar películas
-        items(movies) { movie ->
+        items(filteredMovies) { movie ->
             ExploreItemCard(
                 movie = movie,
                 onClick = onMovieClick
@@ -36,7 +50,7 @@ fun ExploreGrid(
         }
         
         // Mostrar series de TV
-        items(tvShows) { tv ->
+        items(filteredTvShows) { tv ->
             ExploreItemCard(
                 tv = tv,
                 onClick = onTvClick

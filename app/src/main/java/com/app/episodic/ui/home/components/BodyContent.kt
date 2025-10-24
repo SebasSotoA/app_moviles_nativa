@@ -30,8 +30,38 @@ fun BodyContent(
     discoverTvShows: List<Tv>,
     trendingTvShows: List<Tv>,
     onMovieClick: (id: Int) -> Unit,
-    onTvClick: (id: Int) -> Unit
+    onTvClick: (id: Int) -> Unit,
+    onViewMoreMovies: () -> Unit = {},
+    onViewMoreTrendingMovies: () -> Unit = {},
+    onViewMoreTvShows: () -> Unit = {},
+    onViewMoreTrendingTvShows: () -> Unit = {},
+    minRating: Float = 0f
 ) {
+    // Filter lists based on rating
+    val filteredDiscoverMovies = if (minRating > 0f) {
+        discoverMovies.filter { it.voteAverage >= minRating }
+    } else {
+        discoverMovies
+    }
+    
+    val filteredTrendingMovies = if (minRating > 0f) {
+        trendingMovies.filter { it.voteAverage >= minRating }
+    } else {
+        trendingMovies
+    }
+    
+    val filteredDiscoverTvShows = if (minRating > 0f) {
+        discoverTvShows.filter { it.voteAverage >= minRating }
+    } else {
+        discoverTvShows
+    }
+    
+    val filteredTrendingTvShows = if (minRating > 0f) {
+        trendingTvShows.filter { it.voteAverage >= minRating }
+    } else {
+        trendingTvShows
+    }
+
     LazyColumn(modifier = modifier) {
         item {
             Card(modifier = Modifier.fillMaxWidth()) {
@@ -48,7 +78,7 @@ fun BodyContent(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onViewMoreMovies() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                             contentDescription = "Descubre nuevas películas"
@@ -56,7 +86,7 @@ fun BodyContent(
                     }
                 }
                 LazyRow {
-                    items(discoverMovies) {
+                    items(filteredDiscoverMovies) {
                         MovieCoverImage(
                             movie = it,
                             onMovieClick = onMovieClick,
@@ -76,7 +106,7 @@ fun BodyContent(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onViewMoreTrendingMovies() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                             contentDescription = "Trending now"
@@ -84,7 +114,7 @@ fun BodyContent(
                     }
                 }
                 LazyRow {
-                    items(trendingMovies) {
+                    items(filteredTrendingMovies) {
                         MovieCoverImage(
                             movie = it,
                             onMovieClick = onMovieClick,
@@ -106,7 +136,7 @@ fun BodyContent(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onViewMoreTvShows() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                             contentDescription = "Descubre nuevas series"
@@ -114,7 +144,7 @@ fun BodyContent(
                     }
                 }
                 LazyRow {
-                    items(discoverTvShows) {
+                    items(filteredDiscoverTvShows) {
                         TvCoverImage(
                             tv = it,
                             onTvClick = onTvClick,
@@ -136,7 +166,7 @@ fun BodyContent(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onViewMoreTrendingTvShows() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                             contentDescription = "Series en tendencia"
@@ -144,7 +174,7 @@ fun BodyContent(
                     }
                 }
                 LazyRow {
-                    items(trendingTvShows) {
+                    items(filteredTrendingTvShows) {
                         TvCoverImage(
                             tv = it,
                             onTvClick = onTvClick,

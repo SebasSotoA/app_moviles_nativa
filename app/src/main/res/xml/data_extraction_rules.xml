@@ -1,19 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
-   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Data extraction rules for cloud backup and device transfer.
+    Defines which app data is included/excluded from backup.
+    See https://developer.android.com/about/versions/12/backup-restore#xml-changes
 -->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <!-- Include shared preferences for user settings and authentication -->
+        <include domain="sharedpref" path="PreferenceManager.xml" />
+        
+        <!-- Include app-specific files for favorites and custom lists -->
+        <include domain="file" path="app_data/" />
+        
+        <!-- Exclude cache directory as it will be recreated -->
+        <exclude domain="cache" />
+        
+        <!-- Exclude temporary files and API keys -->
+        <exclude domain="file" path="temp/" />
     </cloud-backup>
+    
     <!--
-    <device-transfer>
-        <include .../>
-        <exclude .../>
-    </device-transfer>
+    Device transfer rules - for Android 12+
+    Allows transferring data when switching between devices
     -->
+    <device-transfer>
+        <!-- Include user preferences and settings -->
+        <include domain="sharedpref" path="PreferenceManager.xml" />
+        
+        <!-- Include user data like favorites and lists -->
+        <include domain="file" path="app_data/" />
+        
+        <!-- Exclude cache and temporary data -->
+        <exclude domain="cache" />
+        <exclude domain="file" path="temp/" />
+    </device-transfer>
 </data-extraction-rules>

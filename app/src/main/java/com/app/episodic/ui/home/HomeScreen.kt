@@ -31,6 +31,7 @@ import com.app.episodic.ui.home.components.GenreButtons
 import com.app.episodic.ui.home.components.HomeHeader
 import com.app.episodic.ui.home.components.SearchResultItem
 import com.app.episodic.ui.home.components.TopContent
+import com.app.episodic.ui.home.components.FilterDialog
 import kotlinx.coroutines.delay
 
 val defaultPadding = 16.dp
@@ -53,6 +54,17 @@ fun HomeScreen(
     }
     
     val state by homeViewModel.homeState.collectAsStateWithLifecycle()
+    
+    // Show filter dialog if needed
+    if (state.showFilterDialog) {
+        FilterDialog(
+            onDismiss = { homeViewModel.dismissFilterDialog() },
+            onApplyFilter = { minRating: Float, genres: List<String> ->
+                homeViewModel.applyFilter(minRating, genres)
+            },
+            onClearFilters = { homeViewModel.clearFilters() }
+        )
+    }
     
     // Limpiar búsqueda cuando se navega a Home
     LaunchedEffect(Unit) {
@@ -93,6 +105,7 @@ fun HomeScreen(
             },
             onFilterClick = {
                 // TODO: Implement filter functionality
+                homeViewModel.onFilterClick()
             }
         )
         
@@ -171,7 +184,8 @@ fun HomeScreen(
                             discoverTvShows = state.discoverTvShows,
                             trendingTvShows = state.trendingTvShows,
                             onMovieClick = onMovieClick,
-                            onTvClick = onTvClick
+                            onTvClick = onTvClick,
+                            minRating = state.minRating
                         )
                     }
                 }

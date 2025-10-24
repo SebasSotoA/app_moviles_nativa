@@ -140,6 +140,7 @@ fun AddToListScreen(
                             },
                             onRenameClick = { listId ->
                                 // TODO: Implementar renombrar
+                                viewModel.renameList(listId, "")
                             },
                             onDeleteClick = { listId ->
                                 viewModel.deleteList(listId)

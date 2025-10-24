@@ -22,6 +22,7 @@ import com.app.episodic.ui.explore.components.ExploreNavigationTabs
 import com.app.episodic.ui.explore.components.ExploreTab
 import com.app.episodic.ui.explore.components.GenreGrid
 import com.app.episodic.ui.theme.EpisodicTheme
+import com.app.episodic.ui.home.components.FilterDialog
 
 @Composable
 fun ExploreScreen(
@@ -33,6 +34,17 @@ fun ExploreScreen(
     onGenreClick: (Int) -> Unit = {}
 ) {
     val state by exploreViewModel.exploreState.collectAsStateWithLifecycle()
+    
+    // Show filter dialog if needed
+    if (state.showFilterDialog) {
+        FilterDialog(
+            onDismiss = { exploreViewModel.dismissFilterDialog() },
+            onApplyFilter = { minRating: Float, genres: List<String> ->
+                exploreViewModel.applyFilter(minRating, genres)
+            },
+            onClearFilters = { exploreViewModel.clearFilters() }
+        )
+    }
     
     Column(modifier = modifier.fillMaxSize()) {
         // Header con título y lupa de búsqueda
@@ -83,13 +95,15 @@ fun ExploreScreen(
                             ExploreTab.PELICULAS -> {
                                 ExploreGrid(
                                     movies = state.popularMovies,
-                                    onMovieClick = onMovieClick
+                                    onMovieClick = onMovieClick,
+                                    minRating = state.minRating
                                 )
                             }
                             ExploreTab.SERIES -> {
                                 ExploreGrid(
                                     tvShows = state.popularTvShows,
-                                    onTvClick = onTvClick
+                                    onTvClick = onTvClick,
+                                    minRating = state.minRating
                                 )
                             }
                             ExploreTab.GENEROS -> {

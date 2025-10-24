@@ -137,6 +137,33 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onFilterClick() {
+        _homeState.update { it.copy(showFilterDialog = true) }
+    }
+
+    fun dismissFilterDialog() {
+        _homeState.update { it.copy(showFilterDialog = false) }
+    }
+
+    fun applyFilter(minRating: Float = 0f, selectedGenres: List<String> = emptyList()) {
+        _homeState.update { 
+            it.copy(
+                showFilterDialog = false,
+                minRating = minRating,
+                selectedGenres = selectedGenres
+            )
+        }
+    }
+
+    fun clearFilters() {
+        _homeState.update { 
+            it.copy(
+                minRating = 0f,
+                selectedGenres = emptyList()
+            )
+        }
+    }
+
 }
 
 data class HomeState(
@@ -147,5 +174,8 @@ data class HomeState(
     val searchResults: List<SearchItem> = emptyList(),
     val isSearching: Boolean = false,
     val error: String? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val showFilterDialog: Boolean = false,
+    val minRating: Float = 0f,
+    val selectedGenres: List<String> = emptyList()
 )
