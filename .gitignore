@@ -11,7 +11,7 @@ output-metadata.json
 # Build files
 .gradle/
 build/
-
+.vscode
 # Local configuration
 local.properties
 
