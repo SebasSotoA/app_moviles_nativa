@@ -1,12 +1,27 @@
 # Episodic — App Android (Kotlin, Jetpack Compose)
 
+[![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://developer.android.com/jetpack/compose)
+[![API](https://img.shields.io/badge/API-24%2B-brightgreen?style=for-the-badge)](https://developer.android.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com)
+
 Aplicación Android nativa para explorar películas y series usando la API de TMDB. Construida con arquitectura MVVM, Jetpack Compose y Hilt.
+
+---
+
+## 📱 Capturas de pantalla
+
+| Inicio                  | Detalle                   | Explorar                   | Listas                   |
+| ----------------------- | ------------------------- | -------------------------- | ------------------------ |
+| ![Home](img/image1.png) | ![Detail](img/image2.png) | ![Explore](img/image3.png) | ![Lists](img/image4.png) |
+
 ---
 
 ## Tabla de contenido
 
 - **[Descripción](#descripción)**
-- **[Demo y documentación](#demo-y-documentación)**
 - **[Características](#características)**
 - **[Arquitectura](#arquitectura)**
 - **[Stack técnico](#stack-técnico)**
@@ -15,6 +30,7 @@ Aplicación Android nativa para explorar películas y series usando la API de TM
 - **[Configuración](#configuración)**
 - **[Instalación y ejecución](#instalación-y-ejecución)**
 - **[Comandos útiles](#comandos-útiles)**
+- **[Contribuir](#contribuir)**
 - **[Calidad y pruebas](#calidad-y-pruebas)**
 - **[Solución de problemas](#solución-de-problemas)**
 - **[Roadmap](#roadmap)**
@@ -35,19 +51,16 @@ Episodic permite descubrir y visualizar información detallada de películas: si
 
 ---
 
-## Documentación
+## ✨ Características
 
-- **Términos y condiciones**: `docs/terminosycondiciones-episodic.pdf`
-
----
-
-## Características
-
-- **Inicio (Home)**: tendencias, descubrimiento, barra de búsqueda, carrusel destacado y filtros por género.
-- **Detalle de película**: ficha completa con reparto, géneros, reseñas y producción.
-- **Explorar**: sección dedicada a descubrimiento de contenido.
-- **Mis listas / Listas**: vistas para colecciones personalizadas (UI preparada, funcionalidad ampliable).
-- **Navegación**: bottom navigation con rutas tipadas y transiciones suaves.
+- 🏠 **Inicio**: Tendencias, descubrimiento, barra de búsqueda, carrusel destacado y filtros por género.
+- 🎬 **Detalle de película**: Ficha completa con reparto, géneros, reseñas y producción.
+- 🔍 **Explorar**: Sección dedicada a descubrimiento de contenido con filtrado avanzado.
+- 📋 **Mis listas**: Vistas para colecciones personalizadas y gestión de favoritos.
+- 🧭 **Navegación**: Bottom navigation con rutas tipadas y transiciones suaves.
+- 🎨 **Diseño moderno**: Interfaz atractiva con Material Design 3 y animaciones suaves.
+- 🌙 **Tema oscuro/claro**: Soporte completo para ambos temas.
+- ⚡ **Rendimiento**: Carga optimizada con indicadores visuales mejorados.
 
 ---
 
@@ -115,7 +128,7 @@ Consulta el desglose completo en los archivos del repositorio.
 
 ## Configuración
 
-1) TMDB API Key (requerido)
+1. TMDB API Key (requerido)
 
 La clave se inyecta vía `BuildConfig.API_KEY` desde `local.properties` (no versionado):
 
@@ -132,6 +145,7 @@ defaultConfig {
     buildConfigField("String", "API_KEY", "\"$apiKey\"")
 }
 ```
+
 ---
 
 ## Instalación y ejecución
@@ -155,6 +169,35 @@ defaultConfig {
 ./gradlew :app:lint
 ./gradlew :app:assembleRelease
 ```
+
+---
+
+## 🤝 Contribuir
+
+¡Las contribuciones son bienvenidas! Por favor sigue estos pasos:
+
+### Proceso de contribución
+
+1. **Fork** el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+### Áreas de mejora
+
+- 🐛 **[FÁCIL]** Issues etiquetados como `good first issue`
+- 🎨 **[FÁCIL]** Mejoras de UI/UX
+- 📚 **[FÁCIL]** Documentación
+- ⚡ **[MEDIO]** Optimizaciones de rendimiento
+- 🧪 **[MEDIO]** Tests unitarios e integración
+
+### Estándares de código
+
+- Sigue la guía de estilo de Kotlin
+- Usa nombres descriptivos para variables y funciones
+- Añade comentarios en lógica compleja
+- Prueba tu código antes de hacer push
 
 ---
 
