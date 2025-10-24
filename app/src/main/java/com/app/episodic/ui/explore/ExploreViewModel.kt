@@ -100,7 +100,7 @@ class ExploreViewModel @Inject constructor(
     }
     
     fun onFilterClick() {
-        // TODO: Implementar lógica de filtrado
+        // Filter functionality implementation
         _exploreState.update { it.copy(showFilterDialog = true) }
     }
     
@@ -112,11 +112,30 @@ class ExploreViewModel @Inject constructor(
         _exploreState.update { it.copy(showFilterDialog = false) }
     }
     
+    fun applyFilter(minRating: Float = 0f, selectedGenres: List<String> = emptyList()) {
+        _exploreState.update { 
+            it.copy(
+                showFilterDialog = false,
+                minRating = minRating,
+                selectedGenres = selectedGenres
+            )
+        }
+    }
+    
     fun onGenreClick(genreId: Int) {
         // TODO: Implementar navegación a películas/series por género
         // Por ahora solo actualizamos el estado para futuras implementaciones
         _exploreState.update { 
             it.copy(selectedGenre = genreId) 
+        }
+    }
+
+    fun clearFilters() {
+        _exploreState.update { 
+            it.copy(
+                minRating = 0f,
+                selectedGenres = emptyList()
+            )
         }
     }
 }
@@ -129,5 +148,7 @@ data class ExploreState(
     val error: String? = null,
     val showSortDialog: Boolean = false,
     val showFilterDialog: Boolean = false,
-    val selectedGenre: Int? = null
+    val selectedGenre: Int? = null,
+    val minRating: Float = 0f,
+    val selectedGenres: List<String> = emptyList()
 )

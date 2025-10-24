@@ -47,6 +47,8 @@ fun GenreScreen(
     onMovieClick: (Int) -> Unit,
     onTvClick: (Int) -> Unit,
     onBackClick: () -> Unit,
+    onViewMoreMovies: () -> Unit = {},
+    onViewMoreTvShows: () -> Unit = {},
     viewModel: GenreViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -124,7 +126,7 @@ fun GenreScreen(
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                             )
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(onClick = onViewMoreMovies) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                                     contentDescription = "Ver más películas"
@@ -194,7 +196,7 @@ fun GenreScreen(
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                             )
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(onClick = onViewMoreTvShows) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                                     contentDescription = "Ver más series"
