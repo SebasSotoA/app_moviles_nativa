@@ -3,12 +3,12 @@ package com.app.episodic.ui.home
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +28,7 @@ import com.app.episodic.ui.components.LoadingView
 import com.app.episodic.ui.home.components.BodyContent
 import com.app.episodic.ui.home.components.GenreButtons
 import com.app.episodic.ui.home.components.HomeHeader
+import com.app.episodic.ui.home.components.SearchResultItem
 import com.app.episodic.ui.home.components.TopContent
 import kotlinx.coroutines.delay
 
@@ -108,9 +108,9 @@ fun HomeScreen(
             if (!state.isLoading && state.error == null) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     if (state.isSearching) {
-                        androidx.compose.foundation.lazy.LazyColumn {
+                        LazyColumn {
                             items(state.searchResults.size) { idx ->
-                                com.app.episodic.ui.home.components.SearchResultItem(
+                                SearchResultItem(
                                     item = state.searchResults[idx],
                                     onClick = { id, mediaType ->
                                         if (mediaType == "movie") {
