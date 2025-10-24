@@ -1,27 +1,31 @@
 package com.app.episodic.utils
 
+import com.app.MovieApplication
+import com.app.episodic.R
+
 object TvGenreConstants {
     private val tvGenreMap = mapOf(
-        10759 to "Action & Adventure",
-        16 to "Animación",
-        35 to "Comedia",
-        80 to "Crimen",
-        99 to "Documental",
-        18 to "Drama",
-        10751 to "Familia",
-        10762 to "Kids",
-        9648 to "Misterio",
-        10763 to "News",
-        10764 to "Reality",
-        10765 to "Sci-Fi & Fantasy",
-        10766 to "Soap",
-        10767 to "Talk",
-        10768 to "War & Politics",
-        37 to "Western"
+        10759 to R.string.genre_action, // Action & Adventure -> usar label acción
+        16 to R.string.genre_animation,
+        35 to R.string.genre_comedy,
+        80 to R.string.genre_crime,
+        99 to R.string.genre_documentary,
+        18 to R.string.genre_drama,
+        10751 to R.string.genre_family,
+        10762 to R.string.genre_unknown, // Kids - no local string available
+        9648 to R.string.genre_mystery,
+        10763 to R.string.genre_unknown, // News
+        10764 to R.string.genre_unknown, // Reality
+        10765 to R.string.genre_scifi,
+        10766 to R.string.genre_unknown, // Soap
+        10767 to R.string.genre_unknown, // Talk
+        10768 to R.string.genre_war,
+        37 to R.string.genre_western
     )
 
     fun getTvGenreNameById(id: Int): String {
-        return tvGenreMap[id] ?: "Unknown"
+        val resId = tvGenreMap[id] ?: R.string.genre_unknown
+        return MovieApplication.appContext.getString(resId)
     }
     
     fun getAllTvGenreIds(): List<Int> {

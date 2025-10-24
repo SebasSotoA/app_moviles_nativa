@@ -4,6 +4,8 @@ import com.app.episodic.utils.GenreConstants
 import com.app.episodic.common.data.ApiMapper
 import com.app.episodic.movie.data.remote.models.MovieDto
 import com.app.episodic.movie.domain.models.Movie
+import com.app.MovieApplication
+import com.app.episodic.R
 
 class MovieApiMapperImpl : ApiMapper<List<Movie>, MovieDto> {
     override fun mapToDomain(apiDto: MovieDto): List<Movie> {
@@ -27,8 +29,18 @@ class MovieApiMapperImpl : ApiMapper<List<Movie>, MovieDto> {
     }
 
     private fun formatEmptyValue(value: String?, default: String = ""): String {
-        if (value.isNullOrEmpty()) return "Unknown $default"
-        return value
+        if (!value.isNullOrEmpty()) return value
+
+        val ctx = MovieApplication.appContext
+        val labelRes = when (default) {
+            "language" -> R.string.label_language
+            "title" -> R.string.label_title
+            "overview" -> R.string.label_overview
+            "date" -> R.string.label_date
+            else -> R.string.genre_unknown
+        }
+
+        return ctx.getString(R.string.unknown_format, ctx.getString(labelRes))
     }
 
     private fun formatGenre(genreIds: List<Int?>?): List<String> {

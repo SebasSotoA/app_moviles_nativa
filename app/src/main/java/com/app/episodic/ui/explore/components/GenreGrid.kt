@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Sports
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.app.episodic.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -27,14 +29,14 @@ fun GenreGrid(
 ) {
     // Lista de géneros principales con sus íconos y posters
     val genres = listOf(
-        GenreItem(28, "Acción", getGenreIcon(28), getGenrePosterPath(28)),
-        GenreItem(27, "Terror", getGenreIcon(27), getGenrePosterPath(27)),
-        GenreItem(878, "Ciencia ficción", getGenreIcon(878), getGenrePosterPath(878)),
-        GenreItem(10749, "Romance", getGenreIcon(10749), getGenrePosterPath(10749)),
-        GenreItem(35, "Comedia", getGenreIcon(35), getGenrePosterPath(35)),
-        GenreItem(12, "Aventura", getGenreIcon(12), getGenrePosterPath(12)),
-        GenreItem(14, "Fantasía", getGenreIcon(14), getGenrePosterPath(14)),
-        GenreItem(18, "Drama", getGenreIcon(18), getGenrePosterPath(18))
+        GenreItem(28, stringResource(id = R.string.genre_action), getGenreIcon(28), getGenrePosterPath(28)),
+        GenreItem(27, stringResource(id = R.string.genre_horror), getGenreIcon(27), getGenrePosterPath(27)),
+        GenreItem(878, stringResource(id = R.string.genre_scifi), getGenreIcon(878), getGenrePosterPath(878)),
+        GenreItem(10749, stringResource(id = R.string.genre_romance), getGenreIcon(10749), getGenrePosterPath(10749)),
+        GenreItem(35, stringResource(id = R.string.genre_comedy), getGenreIcon(35), getGenrePosterPath(35)),
+        GenreItem(12, stringResource(id = R.string.genre_adventure), getGenreIcon(12), getGenrePosterPath(12)),
+        GenreItem(14, stringResource(id = R.string.genre_fantasy), getGenreIcon(14), getGenrePosterPath(14)),
+        GenreItem(18, stringResource(id = R.string.genre_drama), getGenreIcon(18), getGenrePosterPath(18))
     )
     
     LazyVerticalGrid(
