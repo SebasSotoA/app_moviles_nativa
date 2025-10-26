@@ -38,13 +38,18 @@ fun ExploreScreen(
     // Show filter dialog if needed
     if (state.showFilterDialog) {
         FilterDialog(
+            initialMinRating = state.minRating,
+            initialSelectedGenres = state.selectedGenres,
+            initialYear = state.year?.toString() ?: "",
+
             onDismiss = { exploreViewModel.dismissFilterDialog() },
-            onApplyFilter = { minRating: Float, genres: List<String> ->
-                exploreViewModel.applyFilter(minRating, genres)
+            onApplyFilter = { minRating: Float, genres: List<String>, year: Int ->
+                exploreViewModel.applyFilter(minRating, genres, year.toInt())
             },
             onClearFilters = { exploreViewModel.clearFilters() }
         )
     }
+
     
     Column(modifier = modifier.fillMaxSize()) {
         // Header con título y lupa de búsqueda
@@ -94,16 +99,16 @@ fun ExploreScreen(
                         when (state.selectedTab) {
                             ExploreTab.PELICULAS -> {
                                 ExploreGrid(
-                                    movies = state.popularMovies,
+                                    movies = state.visibleMovies,
                                     onMovieClick = onMovieClick,
-                                    minRating = state.minRating
+                                    minRating = 0f // ya filtrado en ViewModel
                                 )
                             }
                             ExploreTab.SERIES -> {
                                 ExploreGrid(
-                                    tvShows = state.popularTvShows,
+                                    tvShows = state.visibleTvShows,
                                     onTvClick = onTvClick,
-                                    minRating = state.minRating
+                                    minRating = 0f // ya filtrado en ViewModel
                                 )
                             }
                             ExploreTab.GENEROS -> {
@@ -115,10 +120,10 @@ fun ExploreScreen(
                     }
                 }
             }
+
+            // Loading view
+            LoadingView(isLoading = state.isLoading)
         }
-        
-        // Loading view
-        LoadingView(isLoading = state.isLoading)
     }
 }
 
