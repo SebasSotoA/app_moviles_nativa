@@ -27,55 +27,11 @@ class ExploreViewModel @Inject constructor(
 
     init {
         loadPopularMovies()
+        loadPopularTvShows()
     }
 
     fun onTabSelected(tab: ExploreTab) {
         _exploreState.update { it.copy(selectedTab = tab) }
-        when (tab) {
-            ExploreTab.PELICULAS -> if (_exploreState.value.visibleMovies.isEmpty()) loadPopularMovies()
-            ExploreTab.SERIES -> if (_exploreState.value.visibleTvShows.isEmpty()) loadPopularTvShows()
-            ExploreTab.GENEROS -> Unit
-        }
-    }
-
-    private fun loadPopularMovies() = viewModelScope.launch {
-        movieRepository.fetchDiscoverMovie().collectAndHandle(
-            onError = { error ->
-                _exploreState.update { it.copy(isLoading = false, error = error?.message) }
-            },
-            onLoading = {
-                _exploreState.update { it.copy(isLoading = true, error = null) }
-            }
-        ) { movies ->
-            _exploreState.update {
-                it.copy(
-                    isLoading = false,
-                    error = null,
-                    allPopularMovies = movies,
-                    visibleMovies = movies
-                )
-            }
-        }
-    }
-
-    private fun loadPopularTvShows() = viewModelScope.launch {
-        tvRepository.fetchDiscoverTv().collectAndHandle(
-            onError = { error ->
-                _exploreState.update { it.copy(isLoading = false, error = error?.message) }
-            },
-            onLoading = {
-                _exploreState.update { it.copy(isLoading = true, error = null) }
-            }
-        ) { tvShows ->
-            _exploreState.update {
-                it.copy(
-                    isLoading = false,
-                    error = null,
-                    allPopularTvShows = tvShows,
-                    visibleTvShows = tvShows
-                )
-            }
-        }
     }
 
     fun onSortClick() {
@@ -103,7 +59,12 @@ class ExploreViewModel @Inject constructor(
                 selectedGenres = genres
             )
         }
-        applyCurrentFilters()
+
+        when (_exploreState.value.selectedTab) {
+            ExploreTab.PELICULAS -> applyFiltersForMovies()
+            ExploreTab.SERIES -> applyFiltersForTvShows()
+            else -> Unit
+        }
     }
 
     fun clearFilters() {
@@ -111,35 +72,88 @@ class ExploreViewModel @Inject constructor(
             it.copy(
                 minRating = 0f,
                 selectedGenres = emptyList(),
-                year = null,
-                selectedGenre = null
+                year = null
             )
         }
-        loadPopularMovies() // al limpiar filtros recargamos las populares
+        loadPopularMovies()
+        loadPopularTvShows()
     }
 
-    private fun applyCurrentFilters() {
+    private fun loadPopularMovies() = viewModelScope.launch {
+        movieRepository.fetchDiscoverMovie().collectAndHandle(
+            onError = { error -> _exploreState.update { it.copy(isLoading = false, error = error?.message) } },
+            onLoading = { _exploreState.update { it.copy(isLoading = true, error = null) } }
+        ) { movies ->
+            _exploreState.update {
+                it.copy(
+                    allPopularMovies = movies,
+                    visibleMovies = movies,
+                    isLoading = false,
+                    error = null
+                )
+            }
+        }
+    }
+
+    private fun loadPopularTvShows() = viewModelScope.launch {
+        tvRepository.fetchDiscoverTv().collectAndHandle(
+            onError = { error -> _exploreState.update { it.copy(isLoading = false, error = error?.message) } },
+            onLoading = { _exploreState.update { it.copy(isLoading = true, error = null) } }
+        ) { tvShows ->
+            _exploreState.update {
+                it.copy(
+                    allPopularTvShows = tvShows,
+                    visibleTvShows = tvShows,
+                    isLoading = false,
+                    error = null
+                )
+            }
+        }
+    }
+
+    private fun applyFiltersForMovies() {
         val state = _exploreState.value
         val genreIds = state.selectedGenres.mapNotNull { MovieGenreConstants.getMovieGenreIdByName(it) }
 
         viewModelScope.launch {
             movieRepository.fetchFilteredMovies(
-                genres =genreIds,
+                genres = genreIds,
                 minRating = state.minRating,
-                year = state.year,
+                year = state.year
             ).collectAndHandle(
-                onError = { error ->
-                    _exploreState.update { it.copy(isLoading = false, error = error?.message) }
-                },
-                onLoading = {
-                    _exploreState.update { it.copy(isLoading = true, error = null) }
-                }
+                onError = { error -> _exploreState.update { it.copy(isLoading = false, error = error?.message) } },
+                onLoading = { _exploreState.update { it.copy(isLoading = true, error = null) } }
             ) { movies ->
                 _exploreState.update {
                     it.copy(
-                        isLoading = false,
                         visibleMovies = movies,
                         allPopularMovies = movies,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+            }
+        }
+    }
+
+    private fun applyFiltersForTvShows() {
+        val state = _exploreState.value
+        val genreIds = state.selectedGenres.mapNotNull { MovieGenreConstants.getMovieGenreIdByName(it) }
+
+        viewModelScope.launch {
+            tvRepository.fetchFilteredTvShows(
+                genres = genreIds,
+                minRating = state.minRating,
+                year = state.year
+            ).collectAndHandle(
+                onError = { error -> _exploreState.update { it.copy(isLoading = false, error = error?.message) } },
+                onLoading = { _exploreState.update { it.copy(isLoading = true, error = null) } }
+            ) { tvShows ->
+                _exploreState.update {
+                    it.copy(
+                        visibleTvShows = tvShows,
+                        allPopularTvShows = tvShows,
+                        isLoading = false,
                         error = null
                     )
                 }
@@ -158,8 +172,7 @@ data class ExploreState(
     val error: String? = null,
     val showSortDialog: Boolean = false,
     val showFilterDialog: Boolean = false,
-    val selectedGenre: Int? = null,
+    val selectedGenres: List<String> = emptyList(),
     val minRating: Float = 0f,
-    val year : Int? = null,
-    val selectedGenres: List<String> = emptyList()
+    val year: Int? = null
 )
