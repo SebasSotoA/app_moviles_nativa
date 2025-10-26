@@ -22,6 +22,16 @@
     <string name="genre_war">Guerra</string>
     <string name="genre_western">Oeste</string>
     <string name="genre_unknown">Unknown</string>
+    
+    <!-- Additional popular genres -->
+    <string name="genre_superhero">Superhéroes</string>
+    <string name="genre_martial_arts">Artes marciales</string>
+    <string name="genre_sports">Deportes</string>
+    <string name="genre_biography">Biografía</string>
+    <string name="genre_film_noir">Film noir</string>
+    <string name="genre_reality">Reality</string>
+    <string name="genre_talk_show">Talk show</string>
+    <string name="genre_news">Noticias</string>
 
     <!-- Etiquetas usadas por mappers -->
     <string name="unknown_format">Unknown %1$s</string>

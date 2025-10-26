@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Sports
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -55,7 +56,8 @@ data class GenreItem(
 fun GenreCard(
     modifier: Modifier = Modifier,
     genre: GenreItem,
-    onClick: (Int) -> Unit = {}
+    onClick: (Int) -> Unit = {},
+    isLoading: Boolean = false
 ) {
     Card(
         modifier = modifier
@@ -94,6 +96,14 @@ fun GenreCard(
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color.Black.copy(alpha = 0.4f))
                 )
+            } else {
+                // Fondo por defecto cuando no hay poster
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.8f))
+                )
             }
             
             // Contenido centrado
@@ -104,13 +114,22 @@ fun GenreCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // Ícono del género
-                Icon(
-                    imageVector = genre.icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(32.dp),
-                    tint = Color.White
-                )
+                // Mostrar loading indicator si está cargando
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    // Ícono del género
+                    Icon(
+                        imageVector = genre.icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp),
+                        tint = Color.White
+                    )
+                }
                 
                 // Nombre del género
                 Text(

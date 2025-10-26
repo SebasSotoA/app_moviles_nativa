@@ -39,21 +39,23 @@ fun GenreButtons(
 ) {
     val genres = listOf(
         GenreButton("28", stringResource(id = R.string.genre_action)),
-        GenreButton("18", stringResource(id = R.string.genre_drama)),
-        GenreButton("35", stringResource(id = R.string.genre_comedy)),
-        GenreButton("10749", stringResource(id = R.string.genre_romance)),
-        GenreButton("27", stringResource(id = R.string.genre_horror)),
-        GenreButton("878", stringResource(id = R.string.genre_scifi)),
-        GenreButton("53", stringResource(id = R.string.genre_thriller)),
-        GenreButton("16", stringResource(id = R.string.genre_animation)),
         GenreButton("12", stringResource(id = R.string.genre_adventure)),
+        GenreButton("16", stringResource(id = R.string.genre_animation)),
+        GenreButton("35", stringResource(id = R.string.genre_comedy)),
         GenreButton("80", stringResource(id = R.string.genre_crime)),
         GenreButton("99", stringResource(id = R.string.genre_documentary)),
+        GenreButton("18", stringResource(id = R.string.genre_drama)),
+        GenreButton("10751", stringResource(id = R.string.genre_family)),
         GenreButton("14", stringResource(id = R.string.genre_fantasy)),
         GenreButton("36", stringResource(id = R.string.genre_history)),
+        GenreButton("27", stringResource(id = R.string.genre_horror)),
         GenreButton("10402", stringResource(id = R.string.genre_music)),
         GenreButton("9648", stringResource(id = R.string.genre_mystery)),
-        GenreButton("10751", stringResource(id = R.string.genre_family)),
+        GenreButton("10749", stringResource(id = R.string.genre_romance)),
+        GenreButton("878", stringResource(id = R.string.genre_scifi)),
+        GenreButton("10770", stringResource(id = R.string.genre_tv_movie)),
+        GenreButton("53", stringResource(id = R.string.genre_thriller)),
+        GenreButton("10752", stringResource(id = R.string.genre_war)),
         GenreButton("37", stringResource(id = R.string.genre_western))
     )
 
