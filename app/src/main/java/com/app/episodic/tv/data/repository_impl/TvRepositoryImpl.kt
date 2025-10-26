@@ -43,6 +43,27 @@ class TvRepositoryImpl(
     }.catch { e ->
         emit(Response.Error(e))
     }
+
+    override suspend fun fetchFilteredTvShows(
+        genres: List<Int>,
+        minRating: Float?,
+        year: Int?
+    ): Flow<Response<List<Tv>>> = flow {
+        emit(Response.Loading())
+        try {
+            val genreQuery = genres.joinToString(",") // TMDb usa IDs separados por coma
+            val response = tvApiService.fetchFilteredTvShows(
+                genres = genreQuery.ifEmpty { null },
+                minRating = minRating,
+                year = year
+            )
+            val mappedTvShows = apiMapper.mapToDomain(response)
+            emit(Response.Success(mappedTvShows))
+        } catch (e: Exception) {
+            emit(Response.Error(e))
+        }
+    }
+
 }
 
 
