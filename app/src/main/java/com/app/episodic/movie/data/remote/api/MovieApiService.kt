@@ -37,4 +37,15 @@ interface MovieApiService {
         @Query("language") language: String = "es-MX",
         @Query("page") page: Int = 1
     ): MovieDto
+
+    @GET(K.MOVIE_ENDPOINT)
+    suspend fun fetchFilteredMovies(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = "es-MX",
+        @Query("with_genres") genres: String? = null,
+        @Query("vote_average.gte") minRating: Float? = null,
+        @Query("primary_release_year") year: Int? = null,
+        @Query("page") page: Int = 1
+    ): MovieDto
+
 }

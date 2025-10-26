@@ -43,4 +43,28 @@ class MovieRepositoryImpl(
     }.catch { e ->
         emit(Response.Error(e))
     }
+
+    override suspend fun fetchFilteredMovies(
+        genres: List<Int>,
+        minRating: Float?,
+        year: Int?
+    ): Flow<Response<List<Movie>>> = flow {
+        emit(Response.Loading())
+
+        try {
+            val genreQuery = genres.joinToString(",") // TMDb usa ids separados por coma
+            val response = movieApiService.fetchFilteredMovies(
+                genres = genreQuery.ifEmpty { null },
+                minRating = minRating,
+                year = year
+            )
+
+            val mappedMovies = apiMapper.mapToDomain(response)
+            emit(Response.Success(mappedMovies))
+        } catch (e: Exception) {
+            emit(Response.Error(e))
+        }
+    }
+
+
 }
