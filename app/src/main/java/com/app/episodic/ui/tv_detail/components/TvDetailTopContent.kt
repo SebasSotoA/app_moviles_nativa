@@ -92,7 +92,9 @@ fun TvDetailTopContent(
         
         // Botón de favorito en la esquina superior derecha
         IconButton(
+
             onClick = {
+                val releaseYear = tvDetail.firstAirDate.takeIf { it.isNotEmpty() }?.substring(0, 4)?.toIntOrNull()
                 val favoriteItem = FavoriteItem(
                     id = tvDetail.id,
                     title = tvDetail.name,
@@ -103,7 +105,8 @@ fun TvDetailTopContent(
                         GenreConstants.getGenreIdByName(genreName) ?: 0
                     }.filter { it != 0 },
                     voteAverage = tvDetail.voteAverage,
-                    isMovie = false
+                    isMovie = false,
+                    releaseYear = releaseYear ?: 0 // si no hay año válido, poner 0
                 )
                 favoritesViewModel.toggleFavorite(favoriteItem)
             },
