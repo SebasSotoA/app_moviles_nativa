@@ -1,37 +1,13 @@
 package com.app.episodic.ui.mylists.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,13 +20,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.app.episodic.favorites.domain.models.FavoriteItem
-import com.app.episodic.movie.domain.models.Movie
-import com.app.episodic.tv.domain.models.Tv
 import com.app.episodic.utils.GenreConstants
 import androidx.compose.ui.res.stringResource
 import com.app.episodic.R
 import com.app.episodic.utils.K
-
 
 @Composable
 fun FavoriteCard(
@@ -62,13 +35,13 @@ fun FavoriteCard(
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(true) }
-    
+
     val genreName = if (favoriteItem.genreIds.isNotEmpty()) {
         GenreConstants.getGenreNameById(favoriteItem.genreIds.first())
     } else {
         stringResource(id = R.string.no_genre)
     }
-    
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -92,7 +65,7 @@ fun FavoriteCard(
                     .data("${K.BASE_IMAGE_URL}${favoriteItem.posterPath}")
                     .crossfade(true)
                     .build()
-                
+
                 AsyncImage(
                     model = imgRequest,
                     contentDescription = null,
@@ -100,9 +73,9 @@ fun FavoriteCard(
                     contentScale = ContentScale.Crop
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             // Información de la película/serie
             Column(
                 modifier = Modifier.weight(1f),
@@ -114,9 +87,9 @@ fun FavoriteCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Spacer(modifier = Modifier.height(4.dp))
-                
+
                 // Título
                 Text(
                     text = favoriteItem.title,
@@ -126,30 +99,43 @@ fun FavoriteCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                
+
                 Spacer(modifier = Modifier.height(4.dp))
-                
-                // Tipo y calificación
+
+                // Tipo, año y calificación
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Tipo
                     Text(
-                        text = if (favoriteItem.isMovie) stringResource(id = R.string.type_movie) else stringResource(id = R.string.type_series),
+                        text = if (favoriteItem.isMovie) stringResource(id = R.string.type_movie)
+                        else stringResource(id = R.string.type_series),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    
+
+                    // Año
+                    favoriteItem.releaseYear?.let { year ->
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = year.toString(),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
                     Spacer(modifier = Modifier.width(8.dp))
-                    
+
+                    // Estrella y calificación
                     Icon(
                         imageVector = Icons.Default.Star,
                         contentDescription = null,
                         tint = Color(0xFFFFD700),
                         modifier = Modifier.size(16.dp)
                     )
-                    
+
                     Spacer(modifier = Modifier.width(4.dp))
-                    
+
                     Text(
                         text = String.format("%.1f", favoriteItem.voteAverage),
                         style = MaterialTheme.typography.bodySmall,
@@ -157,14 +143,14 @@ fun FavoriteCard(
                     )
                 }
             }
-            
+
             // Botones de acción
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Botón de favorito
-                    IconButton(
-                    onClick = { 
+                // Botón favorito
+                IconButton(
+                    onClick = {
                         isFavorite = !isFavorite
                         onFavoriteToggle(favoriteItem.id)
                     }
@@ -172,13 +158,13 @@ fun FavoriteCard(
                     Icon(
                         imageVector = Icons.Default.Favorite,
                         contentDescription = stringResource(id = R.string.favorite),
-                        tint = if (isFavorite) MaterialTheme.colorScheme.primary 
-                               else MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = if (isFavorite) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                
-                // Menú de opciones
+
+                // Menú opciones
                 Box {
                     IconButton(
                         onClick = { showMenu = true }
@@ -189,7 +175,7 @@ fun FavoriteCard(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    
+
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false }
@@ -214,4 +200,3 @@ fun FavoriteCard(
         }
     }
 }
-
