@@ -91,6 +91,7 @@ fun DetailTopContent(
         // Botón de favorito en la esquina superior derecha
         IconButton(
             onClick = {
+                val releaseYear = movieDetail.releaseDate.takeIf { it.isNotEmpty() }?.substring(0, 4)?.toIntOrNull()
                 val favoriteItem = FavoriteItem(
                     id = movieDetail.id,
                     title = movieDetail.title,
@@ -101,7 +102,8 @@ fun DetailTopContent(
                         GenreConstants.getGenreIdByName(genreName) ?: 0
                     }.filter { it != 0 },
                     voteAverage = movieDetail.voteAverage,
-                    isMovie = true
+                    isMovie = true,
+                    releaseYear = releaseYear ?: 0
                 )
                 favoritesViewModel.toggleFavorite(favoriteItem)
             },
