@@ -145,12 +145,13 @@ class HomeViewModel @Inject constructor(
         _homeState.update { it.copy(showFilterDialog = false) }
     }
 
-    fun applyFilter(minRating: Float = 0f, selectedGenres: List<String> = emptyList()) {
+    fun applyFilter(minRating: Float = 0f, selectedGenres: List<String> = emptyList(), year: Int = 0) {
         _homeState.update { 
             it.copy(
                 showFilterDialog = false,
                 minRating = minRating,
-                selectedGenres = selectedGenres
+                selectedGenres = selectedGenres,
+                year = year
             )
         }
     }
@@ -177,5 +178,6 @@ data class HomeState(
     val isLoading: Boolean = false,
     val showFilterDialog: Boolean = false,
     val minRating: Float = 0f,
+    val year: Int = 0,
     val selectedGenres: List<String> = emptyList()
 )
