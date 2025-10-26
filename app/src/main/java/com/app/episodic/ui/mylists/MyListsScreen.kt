@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,13 +33,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.episodic.custom_lists.presentation.viewmodel.CustomListsViewModel
 import com.app.episodic.custom_lists.presentation.components.ListCard
+import com.app.episodic.ui.home.components.FilterDialog
 import com.app.episodic.ui.mylists.components.FavoriteCard
 import com.app.episodic.ui.mylists.components.MyListsContentHeader
 import com.app.episodic.ui.mylists.components.MyListsNavigationTabs
@@ -57,48 +58,46 @@ fun MyListsScreen(
     viewModel: MyListsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    // ViewModel para Listas personalizadas
     val listsViewModel: CustomListsViewModel = hiltViewModel()
     val customLists by listsViewModel.lists.collectAsStateWithLifecycle()
     val listsLoading by listsViewModel.isLoading.collectAsStateWithLifecycle()
 
-    // Refrescar listas cuando se vuelve a esta pantalla (onResume)
+    // Refrescar al volver a la pantalla
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.refreshFavorites()
                 listsViewModel.loadLists()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
-    
-    LaunchedEffect(Unit) {
-        viewModel.refreshFavorites()
+
+    // Diálogo de filtros para favoritos
+    if (state.showFilterDialog && state.selectedTab == MyListsTab.FAVORITOS) {
+        FilterDialog(
+            initialMinRating = state.minRating,
+            initialSelectedGenres = state.selectedGenres,
+            initialYear = state.selectedYear?.toString() ?: "",
+            onDismiss = { viewModel.dismissFilterDialog() },
+            onApplyFilter = { minRating, genres, year ->
+                viewModel.applyFavoriteFilter(minRating, genres, year)
+            },
+            onClearFilters = { viewModel.clearFavoriteFilters() }
+        )
     }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
-                    Text(
-                        text = "Mis Listas",
-                        fontWeight = FontWeight.Bold
-                    ) 
-                },
+                title = { Text("Mis Listas", fontWeight = FontWeight.Bold) },
                 actions = {
                     IconButton(onClick = onSearchClick) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Buscar"
-                        )
+                        Icon(Icons.Default.Search, contentDescription = "Buscar")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                )
+                }
             )
         }
     ) { paddingValues ->
@@ -107,57 +106,40 @@ fun MyListsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Navegación con tabs
             MyListsNavigationTabs(
                 selectedTab = state.selectedTab,
                 onTabSelected = viewModel::onTabSelected
             )
-            
-            // Contenido principal
+
             when (state.selectedTab) {
                 MyListsTab.FAVORITOS -> {
                     Column {
-                        // Header del contenido con "Actividad Reciente" y botones
                         MyListsContentHeader(
                             onSortClick = viewModel::onSortClick,
                             onFilterClick = viewModel::onFilterClick
                         )
-                        
-                        // Lista de favoritos
+
                         if (state.isLoading) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                 CircularProgressIndicator()
                             }
-                        } else if (state.favorites.isEmpty()) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
+                        } else if (state.visibleFavorites.isEmpty()) {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                 Text(
-                                    text = "No has agregado nada aún aquí",
+                                    text = "No hay favoritos con este filtro",
                                     style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(16.dp)
+                                    textAlign = TextAlign.Center
                                 )
                             }
                         } else {
-                            LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                items(state.favorites) { favorite ->
+                            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                items(state.visibleFavorites) { favorite ->
                                     FavoriteCard(
                                         favoriteItem = favorite,
                                         onFavoriteToggle = viewModel::onFavoriteToggle,
                                         onInfoClick = { itemId ->
-                                            if (favorite.isMovie) {
-                                                onMovieClick(itemId)
-                                            } else {
-                                                onTvClick(itemId)
-                                            }
+                                            if (favorite.isMovie) onMovieClick(itemId)
+                                            else onTvClick(itemId)
                                         },
                                         onRemoveFromFavorites = viewModel::onRemoveFromFavorites
                                     )
@@ -166,68 +148,64 @@ fun MyListsScreen(
                         }
                     }
                 }
+
                 MyListsTab.LISTAS -> {
-                    Box(
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp)
                     ) {
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            // Listado de listas existentes
-                            if (listsLoading) {
-                                Box(
-                                    modifier = Modifier.weight(1f),
-                                    contentAlignment = Alignment.Center
-                                ) { CircularProgressIndicator() }
-                            } else if (customLists.isEmpty()) {
-                                Box(
-                                    modifier = Modifier.weight(1f),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "Crea una nueva lista",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .fillMaxWidth()
-                                    )
-                                }
-                            } else {
-                                LazyColumn(
-                                    modifier = Modifier.weight(1f),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    items(customLists) { list ->
-                                        ListCard(
-                                            customList = list,
-                                            onListClick = { id -> onListClick(id) },
-                                            onRenameClick = { listsViewModel.renameList(it, list.name) },
-                                            onDeleteClick = { listsViewModel.deleteList(it) }
-                                        )
-                                    }
-                                }
-                            }
-
-                            // Botón fijo Crear Lista
-                            Button(
-                                onClick = onCreateListClick,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 8.dp)
-                                    .height(56.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = androidx.compose.ui.graphics.Color(0xFF175e38),
-                                    contentColor = androidx.compose.ui.graphics.Color(0xFFE8F5E8)
-                                )
+                        if (listsLoading) {
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.Center
+                            ) { CircularProgressIndicator() }
+                        } else if (customLists.isEmpty()) {
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "Crear Lista",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold
+                                    text = "Crea una nueva lista",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth().padding(16.dp)
                                 )
                             }
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                items(customLists) { list ->
+                                    ListCard(
+                                        customList = list,
+                                        onListClick = { id -> onListClick(id) },
+                                        onRenameClick = { listsViewModel.renameList(it, list.name) },
+                                        onDeleteClick = { listsViewModel.deleteList(it) }
+                                    )
+                                }
+                            }
+                        }
+
+                        // Botón fijo Crear Lista
+                        Button(
+                            onClick = onCreateListClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                                .height(56.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = androidx.compose.ui.graphics.Color(0xFF175e38),
+                                contentColor = androidx.compose.ui.graphics.Color(0xFFE8F5E8)
+                            )
+                        ) {
+                            Text(
+                                text = "Crear Lista",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
