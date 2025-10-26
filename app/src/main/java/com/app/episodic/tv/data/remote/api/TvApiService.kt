@@ -27,5 +27,15 @@ interface TvApiService {
         @Query("language") language: String = "es-MX",
         @Query("page") page: Int = 1
     ): TvDto
+
+    @GET("discover/tv")
+    suspend fun fetchFilteredTvShows(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("language") language: String = "es-MX",
+        @Query("with_genres") genres: String? = null,
+        @Query("vote_average.gte") minRating: Float? = null,
+        @Query("first_air_date_year") year: Int? = null,
+        @Query("page") page: Int = 1
+    ): TvDto
 }
 
