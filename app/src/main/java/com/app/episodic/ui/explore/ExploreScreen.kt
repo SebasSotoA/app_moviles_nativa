@@ -42,8 +42,8 @@ fun ExploreScreen(
             initialYear = state.year?.toString() ?: "",
 
             onDismiss = { exploreViewModel.dismissFilterDialog() },
-            onApplyFilter = { minRating: Float, genres: List<String>, year: Int ->
-                exploreViewModel.applyFilter(minRating, genres, year.toInt())
+            onApplyFilter = { minRating: Float, genres: List<String>, year: Int? ->
+                exploreViewModel.applyFilter(minRating, genres, year)
             },
             onClearFilters = { exploreViewModel.clearFilters() }
         )

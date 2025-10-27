@@ -58,8 +58,8 @@ fun HomeScreen(
     if (state.showFilterDialog) {
         FilterDialog(
             onDismiss = { homeViewModel.dismissFilterDialog() },
-            onApplyFilter = { minRating: Float, genres: List<String>, year: Int ->
-                homeViewModel.applyFilter(minRating, genres, year)
+            onApplyFilter = { minRating: Float, genres: List<String>, year: Int? ->
+                homeViewModel.applyFilter(minRating, genres, year ?: 0)
             },
             onClearFilters = { homeViewModel.clearFilters() }
         )
