@@ -44,6 +44,7 @@ import com.app.episodic.ui.mylists.components.MyListsContentHeader
 import com.app.episodic.ui.mylists.components.MyListsNavigationTabs
 import com.app.episodic.ui.mylists.components.MyListsTab
 import com.app.episodic.ui.theme.EpisodicTheme
+import com.app.episodic.ui.home.components.FilterDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +63,20 @@ fun MyListsScreen(
     val customLists by listsViewModel.lists.collectAsStateWithLifecycle()
     val listsLoading by listsViewModel.isLoading.collectAsStateWithLifecycle()
 
+    // Mostrar FilterDialog si es necesario
+    if (state.showFilterDialog) {
+        FilterDialog(
+            initialMinRating = state.minRating,
+            initialSelectedGenres = state.selectedGenres,
+            initialYear = state.year?.toString() ?: "",
+            onDismiss = { viewModel.dismissFilterDialog() },
+            onApplyFilter = { minRating: Float, genres: List<String>, year: Int? ->
+                viewModel.applyFilter(minRating, genres, year ?: 0)
+            },
+            onClearFilters = { viewModel.clearFilters() }
+        )
+    }
+
     // Refrescar listas cuando se vuelve a esta pantalla (onResume)
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -73,19 +88,19 @@ fun MyListsScreen(
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
-    
+
     LaunchedEffect(Unit) {
         viewModel.refreshFavorites()
     }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
                         text = "Mis Listas",
                         fontWeight = FontWeight.Bold
-                    ) 
+                    )
                 },
                 actions = {
                     IconButton(onClick = onSearchClick) {
@@ -112,7 +127,7 @@ fun MyListsScreen(
                 selectedTab = state.selectedTab,
                 onTabSelected = viewModel::onTabSelected
             )
-            
+
             // Contenido principal
             when (state.selectedTab) {
                 MyListsTab.FAVORITOS -> {
@@ -122,7 +137,7 @@ fun MyListsScreen(
                             onSortClick = viewModel::onSortClick,
                             onFilterClick = viewModel::onFilterClick
                         )
-                        
+
                         // Lista de favoritos
                         if (state.isLoading) {
                             Box(

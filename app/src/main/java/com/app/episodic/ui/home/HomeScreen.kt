@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -59,8 +58,8 @@ fun HomeScreen(
     if (state.showFilterDialog) {
         FilterDialog(
             onDismiss = { homeViewModel.dismissFilterDialog() },
-            onApplyFilter = { minRating: Float, genres: List<String> ->
-                homeViewModel.applyFilter(minRating, genres)
+            onApplyFilter = { minRating: Float, genres: List<String>, year: Int? ->
+                homeViewModel.applyFilter(minRating, genres, year ?: 0)
             },
             onClearFilters = { homeViewModel.clearFilters() }
         )
