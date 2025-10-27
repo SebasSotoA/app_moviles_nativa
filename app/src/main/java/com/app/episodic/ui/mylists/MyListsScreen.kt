@@ -70,8 +70,8 @@ fun MyListsScreen(
             initialSelectedGenres = state.selectedGenres,
             initialYear = state.year?.toString() ?: "",
             onDismiss = { viewModel.dismissFilterDialog() },
-            onApplyFilter = { minRating: Float, genres: List<String>, year: Int ->
-                viewModel.applyFilter(minRating, genres, year)
+            onApplyFilter = { minRating: Float, genres: List<String>, year: Int? ->
+                viewModel.applyFilter(minRating, genres, year ?: 0)
             },
             onClearFilters = { viewModel.clearFilters() }
         )

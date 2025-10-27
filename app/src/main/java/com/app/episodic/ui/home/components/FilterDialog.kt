@@ -25,7 +25,7 @@ fun FilterDialog(
     initialYear: String = "",
     initialSelectedGenres: List<String> = emptyList(),
     onDismiss: () -> Unit,
-    onApplyFilter: (minRating: Float, genres: List<String>, year:Int ) -> Unit,
+    onApplyFilter: (minRating: Float, genres: List<String>, year:Int? ) -> Unit,
     onClearFilters: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -166,7 +166,7 @@ fun FilterDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    val year = releaseYearText.toIntOrNull() ?: 0
+                    val year = releaseYearText.toIntOrNull()
                     onApplyFilter(minRating, selectedGenres.value.toList(), year)
                     onDismiss()
                 },
